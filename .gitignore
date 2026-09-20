@@ -21,3 +21,7 @@ Thumbs.db
 
 # Raw reverse-engineering string dumps (=contiennent des données perso, jamais public)
 analysis/strings/
+
+# Sorties de scripts/release.sh
+firmware/build-*/
+dist/

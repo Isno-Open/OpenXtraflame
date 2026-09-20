@@ -11,7 +11,7 @@ Custom firmware open-source pour les poêles à granulés Extraflame (et compati
 
 📖 **Le reverse complet, le dump du module Black Label et le protocole Micronova pas à pas** : [www.isno.fr/projets/openxtraflame](https://www.isno.fr/projets/openxtraflame)
 
-**Statut** : v0.1.0-rc2 (=release candidate, usage perso validé sur Extraflame Teodora Evo)
+**Statut** : v0.1.0-rc3 (=release candidate, usage perso validé sur Extraflame Teodora Evo)
 
 ## Objectif
 
