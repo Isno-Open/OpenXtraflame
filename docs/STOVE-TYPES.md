@@ -67,7 +67,7 @@ OpenXtraflame lit au boot les champs `stove_model` + `matricola` depuis la parti
 Si votre poêle n'est pas Teodora Evo I_VENT et si OpenXtraflame le détecte mal :
 1. Notez la valeur de `matricola` et `stove_model` renvoyée par `/api/status.json`
 2. Notez le vrai modèle commercial de votre poêle (Anastasia, Diadema, ...)
-3. Ouvrez un issue [GitHub](https://github.com/Shad107/OpenXtraflame/issues) avec titre `[stove-detection] matricola=XXXXXXXXXX modèle=YYYY`
+3. Ouvrez un issue [GitHub](https://github.com/Isno-Open/OpenXtraflame/issues) avec titre `[stove-detection] matricola=XXXXXXXXXX modèle=YYYY`
 
 À terme, la table communautaire permettra de sélectionner automatiquement la bonne `Addrs_dyn`.
 

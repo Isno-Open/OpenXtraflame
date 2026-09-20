@@ -40,7 +40,8 @@ Publier sur MQTT :
 ```bash
 mosquitto_pub -h 192.168.1.10 -u olivier -P xxx \
     -t 'extraflame/poele/ota/pull' \
-    -m 'https://raw.githubusercontent.com/Shad107/OpenXtraflame/main/releases/v1.1.0/OpenXtraflame.bin'
+    -m 'https://github.com/Isno-Open/OpenXtraflame/releases/latest/download/openextraflame-blacklabel.bin'
+# ou openextraflame-external.bin pour un ESP32 externe : chaque cible a son image, ne pas les mélanger
 ```
 
 Ou HTTP local :
