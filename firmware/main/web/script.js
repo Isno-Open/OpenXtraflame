@@ -259,6 +259,13 @@ async function loadConfig() {
         const v = c.version || 'v?';
         $('ota-current-version').textContent = v;
         $('version').textContent = v;   /* header tagline */
+        /* URL OTA par défaut : l'image de CETTE cible (blacklabel ou external), jamais l'autre.
+         * Les releases publient openextraflame-<cible>.bin ; un openextraflame.bin unique
+         * n'existe pas, il flasherait la mauvaise image sur l'autre cible. */
+        if (c.target && $('ota-url')) {
+            otaTarget = c.target;
+            $('ota-url').value = OTA_RELEASE_URL + OTA_ASSET_PREFIX + c.target + '.bin';
+        }
     } catch (e) {
         console.warn('config error', e);
     }
@@ -424,11 +431,17 @@ async function otaRollback() {
     setTimeout(() => location.reload(), 5000);
 }
 
+/* Dépôt des releases : une seule définition, reprise par l'URL par défaut et par la vérification. */
+const OTA_REPO = 'Isno-Open/OpenXtraflame';
+const OTA_RELEASE_URL = 'https://github.com/' + OTA_REPO + '/releases/latest/download/';
+const OTA_ASSET_PREFIX = 'openextraflame-';
+let otaTarget = null;   /* renseigné par loadConfig() depuis /api/config ("target") */
+
 async function otaCheck() {
     const span = $('ota-latest');
     span.textContent = '⏳ Interrogation GitHub...';
     try {
-        const r = await fetch('https://api.github.com/repos/Shad107/OpenXtraflame/releases/latest');
+        const r = await fetch('https://api.github.com/repos/' + OTA_REPO + '/releases/latest');
         if (!r.ok) {
             span.textContent = r.status === 404
                 ? '❌ Repo privé ou pas de release publique'
@@ -438,11 +451,14 @@ async function otaCheck() {
         const j = await r.json();
         const latest = j.tag_name || j.name || '?';
         const current = $('version').textContent;
-        const url = (j.assets || []).map(a => a.browser_download_url).find(u => /openextraflame\.bin$/.test(u));
+        /* L'asset de CETTE cible ; sans cible connue, on ne propose rien plutôt que l'autre image. */
+        const want = otaTarget ? OTA_ASSET_PREFIX + otaTarget + '.bin' : null;
+        const url = want ? (j.assets || []).map(a => a.browser_download_url).find(u => u.endsWith('/' + want)) : null;
         if (url) $('ota-url').value = url;
         span.textContent = current === latest
             ? `✅ ${current} = latest`
-            : `⚠️ Installé ${current}, dispo ${latest}`;
+            : !otaTarget ? `⚠️ Dispo ${latest}, cible inconnue : utilise le flash manuel`
+            : `⚠️ Installé ${current}, dispo ${latest}${url ? '' : ' (pas d\'image ' + want + ' dans cette release)'}`;
     } catch (e) {
         span.textContent = '❌ Erreur réseau';
     }

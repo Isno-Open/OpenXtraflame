@@ -400,7 +400,7 @@
             <div class="form-group">
                 <label>Ou directement depuis GitHub (=one-click)</label>
                 <div class="input-with-button">
-                    <input id="ota-url" type="text" value="https://github.com/Shad107/OpenXtraflame/releases/latest/download/openextraflame.bin">
+                    <input id="ota-url" type="text" value="" placeholder="renseignée automatiquement selon la cible (blacklabel / external)">
                     <button class="btn btn-primary" id="ota-pull">⬇️ Pull</button>
                 </div>
                 <div class="button-row" style="margin-top:0.5rem">
@@ -561,10 +561,10 @@
             <p>Firmware ESP32 open-source qui remplace la dépendance cloud du module Wi-Fi Extraflame Black Label par un contrôle 100% local via MQTT / Home Assistant.</p>
             <ul style="line-height:1.8">
                 <li>🌐 <a href="https://www.isno.fr/projets/openxtraflame" target="_blank" rel="noopener">Article complet + guide reverse engineering</a></li>
-                <li>💻 <a href="https://github.com/Shad107/OpenXtraflame" target="_blank" rel="noopener">Code source GitHub</a></li>
-                <li>🐛 <a href="https://github.com/Shad107/OpenXtraflame/issues" target="_blank" rel="noopener">Signaler un bug / contribuer</a></li>
-                <li>📖 <a href="https://github.com/Shad107/OpenXtraflame/blob/main/docs/PROTOCOLE-MICRONOVA.md" target="_blank" rel="noopener">Doc protocole Micronova</a></li>
-                <li>📋 <a href="https://github.com/Shad107/OpenXtraflame/blob/main/docs/STOVE-TYPES.md" target="_blank" rel="noopener">Modèles de poêle compatibles</a></li>
+                <li>💻 <a href="https://github.com/Isno-Open/OpenXtraflame" target="_blank" rel="noopener">Code source GitHub</a></li>
+                <li>🐛 <a href="https://github.com/Isno-Open/OpenXtraflame/issues" target="_blank" rel="noopener">Signaler un bug / contribuer</a></li>
+                <li>📖 <a href="https://github.com/Isno-Open/OpenXtraflame/blob/main/docs/PROTOCOLE-MICRONOVA.md" target="_blank" rel="noopener">Doc protocole Micronova</a></li>
+                <li>📋 <a href="https://github.com/Isno-Open/OpenXtraflame/blob/main/docs/STOVE-TYPES.md" target="_blank" rel="noopener">Modèles de poêle compatibles</a></li>
             </ul>
         </div>
 
@@ -575,7 +575,7 @@
                 <div><strong>stove_model</strong> : <span id="info-stove-model">-</span></div>
                 <div><strong>matricola</strong> : <span id="info-matricola">-</span></div>
             </div>
-            <p class="hint">Détecté auto depuis la partition <code>secret1</code> préservée à la fabrication Extraflame. Si le type ne correspond pas → <a href="https://github.com/Shad107/OpenXtraflame/issues" target="_blank" rel="noopener">issue GitHub</a> avec matricola + modèle commercial pour enrichir la table.</p>
+            <p class="hint">Détecté auto depuis la partition <code>secret1</code> préservée à la fabrication Extraflame. Si le type ne correspond pas → <a href="https://github.com/Isno-Open/OpenXtraflame/issues" target="_blank" rel="noopener">issue GitHub</a> avec matricola + modèle commercial pour enrichir la table.</p>
         </div>
 
         <div class="card">
