@@ -147,12 +147,12 @@ Pr01-Pr30 lue en direct depuis l'EEPROM et comparee aux valeurs factory de la ca
 
 <table>
   <tr>
-    <td><img src="docs/screenshots/poele-maintenance.webp" alt="Auto-diagnostic combustion + compteurs" width="340"></td>
-    <td><img src="docs/screenshots/poele-ut04.webp" alt="Parametres techniciens Pr01-Pr30 vs factory" width="340"></td>
+    <td><img src="docs/screenshots/poele-consommation.webp" alt="Consommation pellets par niveau" width="340"></td>
+    <td><img src="docs/screenshots/poele-chrono.webp" alt="Chrono programmateur hebdo" width="340"></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/poele-consommation.webp" alt="Consommation pellets par niveau" width="340"></td>
     <td><img src="docs/screenshots/poele-config.webp" alt="Configuration calcul consommation" width="340"></td>
+    <td><img src="docs/screenshots/poele-maintenance.webp" alt="Auto-diagnostic combustion + parametres Pr01-Pr30" width="340"></td>
   </tr>
 </table>
 
