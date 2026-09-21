@@ -8,6 +8,7 @@
     --bg: #0a1424; --surface: #101f38; --surface-2: #0d1b30; --border: #1d3457;
     --text: #e8eef8; --muted: #8598ba;
     --accent: #2e86ff; --accent-fg: #ffffff; --accent-weak: rgba(46,134,255,.14); --accent-line: rgba(46,134,255,.34);
+    --accent2: #00d9ff;   /* le cyan du site isno.fr : titres, logo, valeurs mises en avant */
     --ok: #27c93f; --warn: #ffb03a; --danger: #ff5f56;
     --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.45);
     --shadow-lg: var(--shadow);
@@ -31,6 +32,7 @@
     --bg: #f1f5fb; --surface: #ffffff; --surface-2: #e9eff8; --border: #d3ddee;
     --text: #0a1424; --muted: #566a8f;
     --accent: #1560bd; --accent-fg: #ffffff; --accent-weak: rgba(21,96,189,.10); --accent-line: rgba(21,96,189,.30);
+    --accent2: #0090c0;
     --ok: #2e9e5b; --warn: #8a6d0a; --danger: #d64545;
     --shadow: 0 1px 2px rgba(20,30,45,.06), 0 3px 10px rgba(20,30,45,.05);
 }
@@ -70,9 +72,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--accent-weak);
-    color: var(--accent);
-    border: 1px solid var(--accent-line);
+    background: transparent;
+    color: var(--accent2);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     font-size: 1.15rem;
     font-weight: 800;
@@ -118,10 +120,12 @@ body {
     transition: all 0.15s;
 }
 .tab:hover { background: var(--bg-card); }
+/* Onglet actif et bouton principal : contour accent sur fond faible, comme les boutons du site,
+   pas un pavé plein. */
 .tab.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+    background: var(--accent-weak);
+    color: var(--text);
+    border-color: var(--accent);
 }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
@@ -200,7 +204,7 @@ body {
     font-size: 1.7rem;
     font-weight: 600;
     line-height: 1;
-    color: var(--accent);
+    color: var(--accent2);
     font-variant-numeric: tabular-nums;
 }
 .metric-unit {
@@ -316,11 +320,11 @@ input:focus, select:focus {
 }
 .btn:hover { background: var(--bg); border-color: var(--text-muted); }
 .btn-primary {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+    background: var(--accent-weak);
+    color: var(--text);
+    border-color: var(--accent);
 }
-.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-primary:hover { background: var(--accent-line); border-color: var(--accent); }
 .btn-secondary {
     background: transparent;
     color: var(--text);
