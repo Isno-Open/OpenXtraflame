@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr" data-theme="auto">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ea580c">
+<meta name="theme-color" content="#0a1424">
 <title>OpenXtraflame</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2032%2032'%3E%3Cpath%20d%3D'M16%203%20C13%207%2010%2011%2010%2017%20C10%2023%2013%2028%2016%2028%20C19%2028%2022%2023%2022%2017%20C22%2011%2019%207%2016%203%20Z'%20fill%3D'%23ea580c'%2F%3E%3Cpath%20d%3D'M16%2012%20C14%2015%2013%2017%2013%2020%20C13%2023%2014%2025%2016%2025%20C18%2025%2019%2023%2019%2020%20C19%2017%2018%2015%2016%2012%20Z'%20fill%3D'%23fbbf24'%2F%3E%3C%2Fsvg%3E">
 <link rel="stylesheet" href="/style.css">
@@ -214,7 +214,7 @@
     <!-- Poêle -->
     <section id="tab-stove" class="tab-content">
         <!-- Sous-onglets Poêle -->
-        <div style="display:flex;gap:4px;border-bottom:2px solid #e0e0e0;margin-bottom:1em">
+        <div style="display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:1em">
             <button class="subtab active" data-subtab="conso" style="padding:8px 16px;border:none;background:none;font-size:14px;cursor:pointer;border-bottom:3px solid transparent">📉 Consommation</button>
             <button class="subtab" data-subtab="chrono" style="padding:8px 16px;border:none;background:none;font-size:14px;cursor:pointer;border-bottom:3px solid transparent">🕐 Chrono</button>
             <button class="subtab" data-subtab="maint" style="padding:8px 16px;border:none;background:none;font-size:14px;cursor:pointer;border-bottom:3px solid transparent">🔧 Maintenance</button>
@@ -233,10 +233,10 @@
                 </div>
                 <h4 style="margin:1.5em 0 0.5em">Répartition par niveau</h4>
                 <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:monospace">
-                    <thead><tr style="background:#f0f0f0;text-align:left">
+                    <thead><tr style="background:var(--surface-2);text-align:left">
                         <th style="padding:6px 8px">Niveau</th><th style="padding:6px 8px">Heures</th><th style="padding:6px 8px">kg/h</th><th style="padding:6px 8px">kg cumulés</th><th style="padding:6px 8px">%</th>
                     </tr></thead>
-                    <tbody id="c-breakdown"><tr><td colspan="5" style="padding:8px;color:#888">Chargement...</td></tr></tbody>
+                    <tbody id="c-breakdown"><tr><td colspan="5" style="padding:8px;color:var(--text-muted)">Chargement...</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -253,7 +253,7 @@
                     </label>
                 </div>
                 <div id="chrono-programs" style="display:flex;flex-direction:column;gap:12px">
-                    <div style="color:#888">Chargement...</div>
+                    <div style="color:var(--text-muted)">Chargement...</div>
                 </div>
                 <div class="button-row" style="margin-top:12px">
                     <button class="btn btn-primary" id="chrono-save">💾 Enregistrer chrono</button>
@@ -270,7 +270,7 @@
                 <h3>🩺 Auto-diagnostic combustion</h3>
                 <p class="hint">Analyse basée sur les métriques live du poêle. Recommandations data-driven.</p>
                 <div id="maint-diag" style="display:flex;flex-direction:column;gap:8px">
-                    <div style="color:#888">Chargement...</div>
+                    <div style="color:var(--text-muted)">Chargement...</div>
                 </div>
             </div>
 
@@ -302,7 +302,7 @@
                     <span id="m-snap-result" class="hint" style="align-self:center"></span>
                 </div>
                 <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:monospace">
-                    <thead><tr style="background:#f0f0f0;text-align:left">
+                    <thead><tr style="background:var(--surface-2);text-align:left">
                         <th style="padding:4px 6px">Pr</th>
                         <th style="padding:4px 6px">EEPROM</th>
                         <th style="padding:4px 6px">Label</th>
@@ -311,7 +311,7 @@
                         <th style="padding:4px 6px;text-align:right">Écart</th>
                         <th style="padding:4px 6px">Reco</th>
                     </tr></thead>
-                    <tbody id="m-params-tbody"><tr><td colspan="7" style="padding:8px;color:#888">Chargement...</td></tr></tbody>
+                    <tbody id="m-params-tbody"><tr><td colspan="7" style="padding:8px;color:var(--text-muted)">Chargement...</td></tr></tbody>
                 </table>
             </div>
 
@@ -319,14 +319,14 @@
                 <h3>🚨 Historique alarmes</h3>
                 <p class="hint">20 dernières alarmes avec durée. Persisté en NVS.</p>
                 <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:monospace">
-                    <thead><tr style="background:#f0f0f0;text-align:left">
+                    <thead><tr style="background:var(--surface-2);text-align:left">
                         <th style="padding:4px 6px">Début</th>
                         <th style="padding:4px 6px">Fin</th>
                         <th style="padding:4px 6px">Durée</th>
                         <th style="padding:4px 6px">Code</th>
                         <th style="padding:4px 6px">Type</th>
                     </tr></thead>
-                    <tbody id="m-alarms-tbody"><tr><td colspan="5" style="padding:8px;color:#888">Chargement...</td></tr></tbody>
+                    <tbody id="m-alarms-tbody"><tr><td colspan="5" style="padding:8px;color:var(--text-muted)">Chargement...</td></tr></tbody>
                 </table>
             </div>
 
@@ -368,11 +368,11 @@
 
                 <h4 style="margin:1em 0 0.5em">Consommation calculée (kg/h)</h4>
                 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;font-family:monospace">
-                    <div><small>P1</small><input id="pl-c1" type="number" step="0.01" readonly style="width:100%;background:#f5f5f5;color:#666"></div>
-                    <div><small>P2</small><input id="pl-c2" type="number" step="0.01" readonly style="width:100%;background:#f5f5f5;color:#666"></div>
-                    <div><small>P3</small><input id="pl-c3" type="number" step="0.01" readonly style="width:100%;background:#f5f5f5;color:#666"></div>
-                    <div><small>P4</small><input id="pl-c4" type="number" step="0.01" readonly style="width:100%;background:#f5f5f5;color:#666"></div>
-                    <div><small>P5</small><input id="pl-c5" type="number" step="0.01" readonly style="width:100%;background:#f5f5f5;color:#666"></div>
+                    <div><small>P1</small><input id="pl-c1" type="number" step="0.01" readonly style="width:100%;background:var(--surface-2);color:var(--text-muted)"></div>
+                    <div><small>P2</small><input id="pl-c2" type="number" step="0.01" readonly style="width:100%;background:var(--surface-2);color:var(--text-muted)"></div>
+                    <div><small>P3</small><input id="pl-c3" type="number" step="0.01" readonly style="width:100%;background:var(--surface-2);color:var(--text-muted)"></div>
+                    <div><small>P4</small><input id="pl-c4" type="number" step="0.01" readonly style="width:100%;background:var(--surface-2);color:var(--text-muted)"></div>
+                    <div><small>P5</small><input id="pl-c5" type="number" step="0.01" readonly style="width:100%;background:var(--surface-2);color:var(--text-muted)"></div>
                 </div>
             </div>
         </div>
@@ -570,7 +570,7 @@
 
         <div class="card">
             <h3>Identité du poêle</h3>
-            <div id="stove-type-info" style="font-family:monospace;background:#f5f5f5;padding:12px;border-radius:4px;font-size:13px;line-height:2">
+            <div id="stove-type-info" style="font-family:monospace;background:var(--surface-2);padding:12px;border-radius:4px;font-size:13px;line-height:2">
                 <div><strong>stove_type</strong> : <span id="info-stove-type">-</span></div>
                 <div><strong>stove_model</strong> : <span id="info-stove-model">-</span></div>
                 <div><strong>matricola</strong> : <span id="info-matricola">-</span></div>
@@ -586,7 +586,7 @@
     </section>
 
     <!-- Sticky save bar -->
-    <div class="save-bar" id="save-bar">
+    <div class="save-bar" id="save-bar" hidden>
         <button class="btn btn-primary btn-lg" id="save">💾 Sauver &amp; redémarrer</button>
     </div>
 </main>

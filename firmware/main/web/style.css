@@ -1,67 +1,46 @@
 /* openextraflame - Modern UI */
+/* Thème isno.fr, le même que l'interface d'OpenProfalux : mode nuit (bleu foncé) par
+   défaut, thème clair seulement si l'utilisateur le force par le bouton (data-theme="light").
+   Les jetons historiques de cette feuille (--bg-card, --primary, ...) sont des alias des
+   jetons isno, pour que le reste de la feuille lise une seule palette. */
 :root {
-    --bg: #f8fafc;
-    --bg-card: #ffffff;
-    --border: #e2e8f0;
-    --text: #0f172a;
-    --text-muted: #64748b;
-    --primary: #ea580c;
-    --primary-hover: #c2410c;
-    --primary-soft: #fed7aa;
-    --success: #16a34a;
-    --success-soft: #dcfce7;
-    --warning: #eab308;
-    --warning-soft: #fef3c7;
-    --danger: #dc2626;
-    --danger-soft: #fee2e2;
-    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-    --shadow-lg: 0 4px 12px rgba(15, 23, 42, 0.08);
-    --radius: 10px;
-    --radius-sm: 6px;
-}
+    color-scheme: dark;   /* les contrôles natifs (listes, ascenseurs) suivent le thème */
+    --bg: #0a1424; --surface: #101f38; --surface-2: #0d1b30; --border: #1d3457;
+    --text: #e8eef8; --muted: #8598ba;
+    --accent: #2e86ff; --accent-fg: #ffffff; --accent-weak: rgba(46,134,255,.14); --accent-line: rgba(46,134,255,.34);
+    --ok: #27c93f; --warn: #ffb03a; --danger: #ff5f56;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.45);
+    --shadow-lg: var(--shadow);
+    --radius: 13px; --radius-sm: 9px;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #0f172a;
-        --bg-card: #1e293b;
-        --border: #334155;
-        --text: #f1f5f9;
-        --text-muted: #94a3b8;
-        --primary-soft: #7c2d12;
-        --success-soft: #14532d;
-        --warning-soft: #713f12;
-        --danger-soft: #7f1d1d;
-        --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-}
-:root[data-theme="dark"] {
-    --bg: #0f172a;
-    --bg-card: #1e293b;
-    --border: #334155;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --primary-soft: #7c2d12;
-    --success-soft: #14532d;
-    --warning-soft: #713f12;
-    --danger-soft: #7f1d1d;
+    --bg-card: var(--surface);
+    --text-muted: var(--muted);
+    --primary: var(--accent);
+    --primary-hover: color-mix(in srgb, var(--accent) 88%, #ffffff);
+    --primary-soft: var(--accent-weak);
+    --success: var(--ok);
+    --success-soft: color-mix(in srgb, var(--ok) 14%, transparent);
+    --warning: var(--warn);
+    --warning-soft: color-mix(in srgb, var(--warn) 14%, transparent);
+    --danger-soft: color-mix(in srgb, var(--danger) 14%, transparent);
 }
 :root[data-theme="light"] {
-    --bg: #f8fafc;
-    --bg-card: #ffffff;
-    --border: #e2e8f0;
-    --text: #0f172a;
-    --text-muted: #64748b;
-    --primary-soft: #fed7aa;
-    --success-soft: #dcfce7;
-    --warning-soft: #fef3c7;
-    --danger-soft: #fee2e2;
+    color-scheme: light;
+    --bg: #f1f5fb; --surface: #ffffff; --surface-2: #e9eff8; --border: #d3ddee;
+    --text: #0a1424; --muted: #566a8f;
+    --accent: #1560bd; --accent-fg: #ffffff; --accent-weak: rgba(21,96,189,.10); --accent-line: rgba(21,96,189,.30);
+    --ok: #2e9e5b; --warn: #8a6d0a; --danger: #d64545;
+    --shadow: 0 1px 2px rgba(20,30,45,.06), 0 3px 10px rgba(20,30,45,.05);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* une classe d'affichage ne doit jamais réafficher un élément caché */
 * { margin: 0; padding: 0; }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--sans);
     max-width: 920px;
     margin: 0 auto;
     padding: 0 1rem 6rem;
@@ -91,8 +70,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary), #f97316);
-    color: #fff;
+    background: var(--accent);
+    color: var(--accent-fg);
     border-radius: var(--radius);
     font-size: 1.15rem;
     font-weight: 800;
@@ -529,13 +508,13 @@ input:focus, select:focus {
 .toast-info    { border-left-color: var(--primary); }
 .toast-success { border-left-color: var(--success); background: var(--success-soft); }
 .toast-warn    { border-left-color: var(--warning); background: var(--warning-soft); }
-.toast-error   { border-left-color: var(--danger);  background: var(--danger-soft); color: #7f1d1d; }
+.toast-error   { border-left-color: var(--danger);  background: var(--danger-soft); }
 
 /* --- Modal confirm dialog --- */
 #confirm-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.55);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     align-items: center;
     justify-content: center;
