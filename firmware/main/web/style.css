@@ -70,8 +70,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--accent);
-    color: var(--accent-fg);
+    background: var(--accent-weak);
+    color: var(--accent);
+    border: 1px solid var(--accent-line);
     border-radius: var(--radius);
     font-size: 1.15rem;
     font-weight: 800;
@@ -158,9 +159,9 @@ body {
     width: 10px;
     height: 10px;
     border-radius: 999px;
-    background: var(--warning);
+    background: var(--muted);
     display: inline-block;
-    box-shadow: 0 0 0 4px var(--warning-soft);
+    box-shadow: none;
 }
 .status-dot.ok    { background: var(--success); box-shadow: 0 0 0 4px var(--success-soft); }
 .status-dot.err   { background: var(--danger);  box-shadow: 0 0 0 4px var(--danger-soft);  }
@@ -195,10 +196,11 @@ body {
     margin-bottom: 0.4rem;
 }
 .metric-value {
-    font-size: 2.2rem;
-    font-weight: 700;
+    font-family: var(--mono);   /* chiffres en mono, comme les pourcentages d'OpenProfalux */
+    font-size: 1.7rem;
+    font-weight: 600;
     line-height: 1;
-    color: var(--primary);
+    color: var(--accent);
     font-variant-numeric: tabular-nums;
 }
 .metric-unit {
@@ -323,10 +325,11 @@ input:focus, select:focus {
     background: transparent;
     color: var(--text);
 }
+/* Pas d'orange sur les boutons (charte isno) : le bouton d'alarme est un bouton neutre. */
 .btn-warning {
-    background: var(--warning-soft);
-    color: var(--warning);
-    border-color: var(--warning);
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
 }
 .btn-danger {
     background: var(--danger-soft);
@@ -413,8 +416,8 @@ input:focus, select:focus {
     letter-spacing: 0.05em;
 }
 .badge-warning {
-    background: var(--warning-soft);
-    color: var(--warning);
+    background: var(--accent-weak);
+    color: var(--accent);
 }
 
 /* Danger zone */
