@@ -38,16 +38,35 @@ function ask(msg) {
     });
 }
 
-/* Theme toggle */
+/* Thème : nuit par défaut (thème isno), clair si l'utilisateur le demande ; mémorisé. */
+const THEME = { dark: 'dark', light: 'light' };
 function initTheme() {
     const saved = localStorage.getItem('theme');
-    if (saved) document.documentElement.setAttribute('data-theme', saved);
+    if (saved === THEME.light) document.documentElement.setAttribute('data-theme', THEME.light);
     $('theme-btn').addEventListener('click', () => {
-        const cur = document.documentElement.getAttribute('data-theme');
-        const next = cur === 'dark' ? 'light' : cur === 'light' ? 'auto' : 'dark';
-        if (next === 'auto') document.documentElement.removeAttribute('data-theme');
-        else document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
+        const light = document.documentElement.getAttribute('data-theme') === THEME.light;
+        if (light) document.documentElement.removeAttribute('data-theme');
+        else document.documentElement.setAttribute('data-theme', THEME.light);
+        localStorage.setItem('theme', light ? THEME.dark : THEME.light);
+    });
+}
+
+/* Barre « Sauver et redémarrer » : cachée tant qu'aucun champ de configuration n'a changé.
+ * Les champs sont ceux que save() envoie ; un champ absent du HTML (cible External) est ignoré. */
+const CONFIG_FIELD_IDS = [
+    'wifi-ssid', 'wifi-pwd', 'ssid-select', 'mqtt-host', 'mqtt-port', 'mqtt-user', 'mqtt-pwd', 'mqtt-prefix', 'mqtt-tls',
+    'stove-name', 'ha-discovery', 'publish-interval', 'cloud-enabled', 'tc2-username', 'tc2-password',
+    'tc2-stove-id', 'tc2-stove-model',
+    'pl-tank', 'pl-sack', 'pl-price', 'pl-winter', 'pl-nom-kw', 'pl-min-kw', 'pl-eff', 'pl-cal',
+    'guardian-enabled', 'guardian-url', 'guardian-token', 'guardian-action',
+];
+function setDirty(dirty) { $('save-bar').hidden = !dirty; }
+function initDirtyTracking() {
+    CONFIG_FIELD_IDS.forEach(id => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener('input', () => setDirty(true));
+        el.addEventListener('change', () => setDirty(true));
     });
 }
 
@@ -70,13 +89,13 @@ function initTabs() {
             });
             $$('.subtab-content').forEach(x => x.style.display = 'none');
             t.classList.add('active');
-            t.style.borderBottomColor = '#ea580c';
+            t.style.borderBottomColor = 'var(--primary)';
             document.getElementById('subtab-' + t.dataset.subtab).style.display = 'block';
         });
     });
     /* Init : first subtab active border */
     const firstSub = document.querySelector('.subtab.active');
-    if (firstSub) firstSub.style.borderBottomColor = '#ea580c';
+    if (firstSub) firstSub.style.borderBottomColor = 'var(--primary)';
 }
 
 /* Load status periodically */
@@ -127,7 +146,7 @@ async function loadStatus() {
             const sum = totals.reduce((a,b)=>a+b, 0);
             $('c-breakdown').innerHTML = ['P1','P2','P3','P4','P5'].map((n,i) => {
                 const pct = sum > 0 ? (totals[i]/sum*100).toFixed(1) : '0';
-                return `<tr style="border-top:1px solid #eee"><td style="padding:6px 8px"><strong>${n}</strong></td><td style="padding:6px 8px">${hours[i]}</td><td style="padding:6px 8px">${conso[i].toFixed(2)}</td><td style="padding:6px 8px">${totals[i].toFixed(0)}</td><td style="padding:6px 8px">${pct}%</td></tr>`;
+                return `<tr style="border-top:1px solid var(--border)"><td style="padding:6px 8px"><strong>${n}</strong></td><td style="padding:6px 8px">${hours[i]}</td><td style="padding:6px 8px">${conso[i].toFixed(2)}</td><td style="padding:6px 8px">${totals[i].toFixed(0)}</td><td style="padding:6px 8px">${pct}%</td></tr>`;
             }).join('');
         }
         /* Enum Extraflame TotalControl (0x21 machineState) */
@@ -343,6 +362,7 @@ async function save() {
         });
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         toast('✅ Configuration sauvegardée. Redémarrage...', 'success');
+        setDirty(false);
         setTimeout(async () => {
             try { await fetch('/reboot', {method: 'POST'}); } catch (e) {}
             setTimeout(() => location.reload(), 8000);
@@ -631,6 +651,7 @@ async function loadDebug() {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initTabs();
+    initDirtyTracking();
 
     $('scan').addEventListener('click', scan);
 
@@ -751,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <input type="checkbox" data-prog="${p.id-1}" data-day="${di}" ${day.enabled?'checked':''}>
                             ${day.name}
                          </label>`).join('');
-                    return `<div style="border:1px solid #e0e0e0;border-radius:6px;padding:12px;background:#fafafa">
+                    return `<div style="border:1px solid var(--border);border-radius:6px;padding:12px;background:var(--surface-2)">
                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
                             <strong style="font-size:16px">P${p.id}</strong>
                             <label style="display:flex;align-items:center;gap:6px">
@@ -895,9 +916,9 @@ const PR_TABLE = [
 ];
 
 const SAFETY_BADGE = {
-    'safe':       '<span style="background:#10b981;color:white;padding:1px 6px;border-radius:3px;font-size:10px">SAFE</span>',
-    'combustion': '<span style="background:#f59e0b;color:white;padding:1px 6px;border-radius:3px;font-size:10px">COMBUSTION</span>',
-    'danger':     '<span style="background:#ef4444;color:white;padding:1px 6px;border-radius:3px;font-size:10px">DANGER</span>',
+    'safe':       '<span style="background:var(--success);color:white;padding:1px 6px;border-radius:3px;font-size:10px">SAFE</span>',
+    'combustion': '<span style="background:var(--warning);color:white;padding:1px 6px;border-radius:3px;font-size:10px">COMBUSTION</span>',
+    'danger':     '<span style="background:var(--danger);color:white;padding:1px 6px;border-radius:3px;font-size:10px">DANGER</span>',
 };
 
 function initMaintTab() {
@@ -952,7 +973,7 @@ async function loadMaintenance() {
         renderMaintAlarms(hist || []);
         renderMaintDiag(status.stove || {}, params.params || []);
     } catch(e) {
-        $('maint-diag').innerHTML = '<div style="color:#ef4444">Erreur chargement : ' + e.message + '</div>';
+        $('maint-diag').innerHTML = '<div style="color:var(--danger)">Erreur chargement : ' + e.message + '</div>';
     }
 }
 
@@ -973,22 +994,22 @@ function renderMaintParams(params) {
         const raw = byAddr[r.addr];
         const real = raw != null ? (raw * r.scale).toFixed(r.scale < 1 ? 1 : 0) : '-';
         const fac  = (r.factory * r.scale).toFixed(r.scale < 1 ? 1 : 0);
-        let deltaPct = '-', deltaColor = '#666';
+        let deltaPct = '-', deltaColor = 'var(--text-muted)';
         if (raw != null && r.factory > 0) {
             const pct = ((raw - r.factory) / r.factory * 100);
             deltaPct = (pct > 0 ? '+' : '') + pct.toFixed(0) + '%';
-            if (Math.abs(pct) < 10) deltaColor = '#10b981';
-            else if (Math.abs(pct) < 30) deltaColor = '#f59e0b';
-            else deltaColor = '#ef4444';
+            if (Math.abs(pct) < 10) deltaColor = 'var(--success)';
+            else if (Math.abs(pct) < 30) deltaColor = 'var(--warning)';
+            else deltaColor = 'var(--danger)';
         }
         const editable = raw != null && r.safety !== 'danger';
-        const editBtn = editable ? `<button data-addr="${r.addr}" data-cur="${raw}" data-fac="${r.factory}" data-label="${r.pr} ${r.label}" data-safety="${r.safety}" class="btn-edit-pr" style="padding:2px 6px;font-size:11px;background:#3b82f6;color:white;border:none;border-radius:3px;cursor:pointer">✏️</button>` : '';
-        return `<tr style="border-bottom:1px solid #eee">
+        const editBtn = editable ? `<button data-addr="${r.addr}" data-cur="${raw}" data-fac="${r.factory}" data-label="${r.pr} ${r.label}" data-safety="${r.safety}" class="btn-edit-pr" style="padding:2px 6px;font-size:11px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:3px;cursor:pointer">✏️</button>` : '';
+        return `<tr style="border-bottom:1px solid var(--border)">
             <td style="padding:4px 6px;font-weight:bold">${r.pr}</td>
             <td style="padding:4px 6px">0x${r.addr.toString(16).padStart(2,'0')}</td>
             <td style="padding:4px 6px">${r.label}</td>
             <td style="padding:4px 6px;text-align:right">${real} ${r.unit}</td>
-            <td style="padding:4px 6px;text-align:right;color:#888">${fac} ${r.unit}</td>
+            <td style="padding:4px 6px;text-align:right;color:var(--text-muted)">${fac} ${r.unit}</td>
             <td style="padding:4px 6px;text-align:right;color:${deltaColor};font-weight:bold">${deltaPct}</td>
             <td style="padding:4px 6px">${SAFETY_BADGE[r.safety]} ${editBtn}</td>
         </tr>`;
@@ -1055,14 +1076,14 @@ function renderMaintAlarms(events) {
     const tbody = $('m-alarms-tbody');
     if (!tbody) return;
     if (!events.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="padding:8px;color:#10b981">✓ Aucune alarme historisée</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="padding:8px;color:var(--success)">✓ Aucune alarme historisée</td></tr>';
         return;
     }
     const fmt = ts => ts ? new Date(ts*1000).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '-';
     const dur = (a,b) => (a && b && b > a) ? Math.round((b-a)/60) + ' min' : '-';
     tbody.innerHTML = events.slice().reverse().map(e => {
         const label = Object.entries(ALARM_LABELS).find(([bit]) => e.code & parseInt(bit))?.[1] || `code ${e.code}`;
-        return `<tr style="border-bottom:1px solid #eee">
+        return `<tr style="border-bottom:1px solid var(--border)">
             <td style="padding:4px 6px">${fmt(e.ts_start)}</td>
             <td style="padding:4px 6px">${fmt(e.ts_end)}</td>
             <td style="padding:4px 6px">${dur(e.ts_start, e.ts_end)}</td>
@@ -1122,16 +1143,16 @@ function renderMaintDiag(stove, params) {
     }
 
     if (!diagnostics.length) {
-        $('maint-diag').innerHTML = '<div style="color:#10b981;padding:8px;background:#ecfdf5;border-radius:4px">✓ Aucun problème détecté par le diagnostic auto. Consulte la table Pr01-Pr30 pour ajustements fins.</div>';
+        $('maint-diag').innerHTML = '<div style="color:var(--success);padding:8px;background:var(--success-soft);border-radius:4px">✓ Aucun problème détecté par le diagnostic auto. Consulte la table Pr01-Pr30 pour ajustements fins.</div>';
         return;
     }
 
-    const sevColors = {'critical':'#ef4444','warning':'#f59e0b','info':'#3b82f6'};
+    const sevColors = {'critical':'var(--danger)','warning':'var(--warning)','info':'var(--accent)'};
     $('maint-diag').innerHTML = diagnostics.map(d => `
-        <div style="border-left:4px solid ${sevColors[d.sev]};background:#fafafa;padding:10px 12px;border-radius:4px">
+        <div style="border-left:4px solid ${sevColors[d.sev]};background:var(--surface-2);padding:10px 12px;border-radius:4px">
             <div style="font-weight:bold;margin-bottom:4px">${d.icon} ${d.title}</div>
-            <div style="font-size:13px;color:#555;margin-bottom:4px">${d.detail}</div>
-            <div style="font-size:13px;color:#0369a1"><strong>Reco:</strong> ${d.reco}</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">${d.detail}</div>
+            <div style="font-size:13px;color:var(--accent)"><strong>Reco:</strong> ${d.reco}</div>
         </div>
     `).join('');
 }
