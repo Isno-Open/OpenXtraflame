@@ -267,10 +267,6 @@ MIT (=voir LICENSE)
 
 ## Disclaimer
 
-**Projet indépendant.** OpenXtraflame n'a aucun lien avec La Nordica-Extraflame S.p.A. ni avec Omnyvore srl. Extraflame, Black Label et Total Control sont des marques de leurs propriétaires, citées uniquement pour désigner le matériel concerné. Modifier le module annule sa garantie.
-
-**Independent project.** OpenXtraflame is not affiliated with La Nordica-Extraflame S.p.A. or Omnyvore srl. Extraflame, Black Label and Total Control are trademarks of their respective owners, named only to identify the hardware involved. Modifying the module voids its warranty.
-
 Ce projet est un travail de reverse engineering effectué sur du matériel personnel dans un but éducatif et pour usage personnel. Aucun code binaire dérivé d'Extraflame n'est distribué. Les cert CA embedded proviennent du dump firmware personnel de l'auteur (=usage privé).
 
 L'utilisation de ce firmware sur votre matériel est à vos risques et périls. Extraflame ne fournit pas de support pour cette utilisation.
