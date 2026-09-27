@@ -56,7 +56,7 @@ Note les valeurs et met à jour `firmware/main/hardware_config.h` section `TARGE
 ### 3. Compile firmware Black Label
 
 ```bash
-docker compose run --rm esp-idf idf.py -DTARGET=blacklabel build
+docker compose run --rm esp-idf idf.py -DBOARD=blacklabel build
 ```
 
 Vérifie que la compilation passe sans warning majeur.
@@ -69,7 +69,7 @@ Vérifie que la compilation passe sans warning majeur.
 - Chargeur 12V pour alimenter la carte
 
 ```bash
-docker compose run --rm esp-idf idf.py -p /dev/ttyUSB0 -DTARGET=blacklabel flash monitor
+docker compose run --rm esp-idf idf.py -p /dev/ttyUSB0 -DBOARD=blacklabel flash monitor
 ```
 
 ### 5. Vérification post-flash
