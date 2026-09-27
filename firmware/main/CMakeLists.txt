@@ -56,5 +56,7 @@ idf_component_register(
         esp-tls
         espressif__mdns
         driver
-        json
+        esp_driver_uart
+        esp_driver_gpio
+        espressif__cjson
 )
