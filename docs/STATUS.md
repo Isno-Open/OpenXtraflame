@@ -174,7 +174,7 @@ Total : ~24h de travail réparti sur 4 weekends.
 ### Build validé
 
 ```
-docker compose run esp-idf idf.py -DOPENXFLAME_TARGET=external build
+docker compose run esp-idf idf.py -DBOARD=external build
 → Successfully created esp32 image
 → Generated /project/build/openextraflame.bin
 ```
@@ -268,9 +268,9 @@ Proposée par Olivier (=voir docs/IDEAS.md) :
 ### Environnement de build reproductible ✅
 - ESP-IDF v5.2.2 natif (sans Docker) : toolchain Xtensa, cmake, ninja, qemu-xtensa
 - Build validé pour les DEUX targets :
-  - `idf.py -DOPENXFLAME_TARGET=external build`  → OK (929 Ko, 41% libre)
-  - `idf.py -DOPENXFLAME_TARGET=blacklabel build` → OK (929 Ko, 41% libre)
-- ⚠️ Le flag correct est `-DOPENXFLAME_TARGET=` (pas `-DTARGET=`, mot réservé CMake).
+  - `idf.py -DBOARD=external build`  → OK (929 Ko, 41% libre)
+  - `idf.py -DBOARD=blacklabel build` → OK (929 Ko, 41% libre)
+- ⚠️ Sélection de carte par `-DBOARD=isno-super | external | blacklabel` (voir boards/).
   Corrigé dans docker-compose.yml.
 - Astuce perf : compiler dans le home Linux (`-B ~/build`) est ~5-10× plus rapide
   que sur `/mnt/c` (I/O du disque Windows monté).

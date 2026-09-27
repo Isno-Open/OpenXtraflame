@@ -3,7 +3,7 @@
 > ## ✅ VALIDÉ SUR LE VRAI POÊLE (2026-07-07)
 > OpenXtraflame communique avec la carte réelle en appliquant ce protocole.
 > Tous les paramètres reversés confirmés corrects (1200 8N2, inversion 0x24,
-> master polling, checksum additif, adresses). **Prérequis build : `-DOPENXFLAME_TARGET=blacklabel`**
+> master polling, checksum additif, adresses). **Prérequis build : `-DBOARD=blacklabel`**
 > (sinon UART poêle sur GPIO17/16 = mauvais pins = carte muette). Vérifier le boot
 > log : `Init UART1 TX=23 RX=5 @ 1200 baud 8N2`.
 

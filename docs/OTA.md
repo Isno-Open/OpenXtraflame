@@ -167,7 +167,7 @@ Version visible via :
 
 1. Build v1.0.0 :
 ```bash
-docker compose run --rm esp-idf idf.py -DTARGET=external build
+docker compose run --rm esp-idf idf.py -DBOARD=external build
 cp build/OpenXtraflame.bin releases/v1.0.0.bin
 ```
 
@@ -179,7 +179,7 @@ docker compose run --rm esp-idf idf.py -p /dev/ttyUSB0 flash
 3. Modifier code, bump version, rebuild :
 ```bash
 # Édite CMakeLists.txt IDF_VER_APP="1.0.1"
-docker compose run --rm esp-idf idf.py -DTARGET=external build
+docker compose run --rm esp-idf idf.py -DBOARD=external build
 cp build/OpenXtraflame.bin releases/v1.0.1.bin
 ```
 
@@ -218,8 +218,8 @@ jobs:
       - name: Build with ESP-IDF
         run: |
           docker compose build
-          docker compose run --rm esp-idf idf.py -DTARGET=external build
-          docker compose run --rm esp-idf idf.py -DTARGET=blacklabel build
+          docker compose run --rm esp-idf idf.py -DBOARD=external build
+          docker compose run --rm esp-idf idf.py -DBOARD=blacklabel build
       - name: Sign
         run: espsecure.py sign_data --version 2 --keyfile ${{ secrets.SIGNING_KEY }} ...
       - name: Create release

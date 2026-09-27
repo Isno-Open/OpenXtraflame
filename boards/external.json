@@ -1,0 +1,14 @@
+{
+  "_comment": [
+    "ESP32 d'appoint cable a la main sur le bus Micronova du poele. Brochage",
+    "releve dans firmware/main/hardware_config.h (cible EXTERNAL, 2026-07-07),",
+    "choisi pour tomber sur les GPIO exposes de l'ATOM Lite. Micronova = 1200 8N2,",
+    "mais micronova.c force ce reglage au boot ; ces valeurs servent au premier",
+    "setup UART. Une carte nommee, pas lue."
+  ],
+  "id": "external",
+  "name": "external-esp32",
+  "mcu": "esp32",
+  "uart": { "num": 1, "tx": 23, "rx": 19, "baud": 1200, "data_bits": 8, "parity": "none", "stop_bits": 2 },
+  "ui": { "button": 0, "button_active_low": true, "led": 2, "led_active_high": true }
+}
