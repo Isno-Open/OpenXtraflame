@@ -188,7 +188,7 @@ docker run --rm -v $PWD:/project -w /project espressif/idf:v5.2.7 idf.py build
 
 # Ou build cible external :
 docker run --rm -v $PWD:/project -w /project espressif/idf:v5.2.7 \
-  bash -c "idf.py -DOPENXFLAME_TARGET=external build"
+  bash -c "idf.py -DBOARD=external build"
 ```
 
 Voir [docs/BUILDING.md](docs/BUILDING.md).

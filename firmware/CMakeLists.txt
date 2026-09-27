@@ -1,21 +1,21 @@
 # Top-level CMakeLists for openextraflame firmware
 cmake_minimum_required(VERSION 3.16)
 
-# Target selection: external (default) or blacklabel
-# We use OPENXFLAME_TARGET because plain "TARGET" is a CMake reserved word.
-if(NOT DEFINED OPENXFLAME_TARGET)
-    set(OPENXFLAME_TARGET "blacklabel")
-endif()
+# La carte visee : -DBOARD=isno-super (ESP32-S3), external ou blacklabel (ESP32).
+# Le brochage en est engendre dans board_pins.h (voir main/CMakeLists.txt).
+set(BOARD "isno-super" CACHE STRING "carte visee : boards/<BOARD>.json")
 
-message(STATUS "Building openextraflame for target: ${OPENXFLAME_TARGET}")
-
-if(OPENXFLAME_TARGET STREQUAL "external")
-    add_compile_definitions(TARGET_EXTERNAL=1)
-elseif(OPENXFLAME_TARGET STREQUAL "blacklabel")
+# Le PROFIL de fonctionnalites suit la carte. Seule la carte d'origine Extraflame
+# (blacklabel) porte le pont cloud, la matricola et la partition secret1 ; toute
+# autre carte (ESP32 d'appoint, Super) est du profil « external ». C'est une
+# regle locale au firmware, pas une propriete de la carte : elle ne vit donc pas
+# dans boards/<carte>.json (isno-super.json est une copie verbatim du launcher).
+if(BOARD STREQUAL "blacklabel")
     add_compile_definitions(TARGET_BLACKLABEL=1)
 else()
-    message(FATAL_ERROR "Unknown OPENXFLAME_TARGET: ${OPENXFLAME_TARGET}. Use 'external' or 'blacklabel'.")
+    add_compile_definitions(TARGET_EXTERNAL=1)
 endif()
+message(STATUS "openextraflame : carte ${BOARD}")
 
 # Firmware version stamped into esp_app_get_description()->version, shown in
 # the Web UI header and the OTA tab. Bump on each release.

@@ -26,7 +26,7 @@ docker compose run --rm esp-idf idf.py set-target esp32
 ### 3. Compiler pour Target External (=ESP32 spare)
 
 ```bash
-docker compose run --rm esp-idf idf.py -DOPENXFLAME_TARGET=external build
+docker compose run --rm esp-idf idf.py -DBOARD=external build
 ```
 
 Le firmware est produit dans `firmware/build/OpenXtraflame.bin`.
@@ -34,7 +34,7 @@ Le firmware est produit dans `firmware/build/OpenXtraflame.bin`.
 ### 4. Compiler pour Target Black Label (=reflash original)
 
 ```bash
-docker compose run --rm esp-idf idf.py -DOPENXFLAME_TARGET=blacklabel build
+docker compose run --rm esp-idf idf.py -DBOARD=blacklabel build
 ```
 
 ⚠️ **Ne flashe PAS avant d'avoir un backup du firmware original !**
@@ -63,7 +63,7 @@ Voir doc officielle Espressif : https://docs.espressif.com/projects/esp-idf/en/l
 cd ~/esp/esp-idf
 . ./export.sh
 cd ~/projects/OpenXtraflame/firmware
-idf.py -DOPENXFLAME_TARGET=external build
+idf.py -DBOARD=external build
 ```
 
 ## Structure des artefacts build

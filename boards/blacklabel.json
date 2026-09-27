@@ -1,0 +1,14 @@
+{
+  "_comment": [
+    "Reflash de la carte d'origine Extraflame Black Label T009_3. Broches CONFIRMEES",
+    "par QEMU + GDB le 2026-07-03 (breakpoint uart_set_pin : uart=1 tx=23 rx=5 ;",
+    "boot log 38400 8N1) et LEDs observees par gpio_set_level (25 26 32 33). Le",
+    "bouton reset (GPIO0) reste a confirmer. Aucun strap : carte nommee."
+  ],
+  "id": "blacklabel",
+  "name": "blacklabel-t009_3",
+  "mcu": "esp32",
+  "uart": { "num": 1, "tx": 23, "rx": 5, "baud": 38400, "data_bits": 8, "parity": "none", "stop_bits": 1 },
+  "ui": { "button": 0, "button_active_low": true, "led": -1 },
+  "leds": { "power": 25, "ble": 26, "wifi": 32, "server": 33, "active_high": true }
+}
