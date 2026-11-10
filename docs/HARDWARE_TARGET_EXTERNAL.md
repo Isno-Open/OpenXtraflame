@@ -1,5 +1,16 @@
 # Target External - Câblage ESP32 spare
 
+> ⚠️ **NON VALIDÉ. À CONFIRMER SUR MATÉRIEL.**
+>
+> Seule la cible **Black Label** a été validée sur un vrai poêle (voir `PROTOCOLE-MICRONOVA.md`).
+> Ce document décrit la voie External par **dérivation**, pas par mesure : le câblage, les broches,
+> le GPIO22 « transceiver » et la procédure de test plus bas n'ont **pas** été éprouvés sur un ESP32
+> externe. À prendre comme une piste, pas comme une recette qui marche.
+>
+> ⚠️ **Sécurité :** le bus Micronova est en **5V open-drain**. Ne reliez **jamais** un GPIO 3,3V
+> (ESP32, M5Stack) en direct : intercalez un convertisseur de niveau (level shifter MOSFET/BSS138,
+> type open-drain). Un branchement direct peut détruire la carte.
+
 Utilise un ESP32 supplémentaire connecté au bus série du poêle en parallèle du module Extraflame officiel.
 
 ## Matériel nécessaire
