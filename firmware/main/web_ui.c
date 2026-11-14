@@ -866,11 +866,17 @@ static esp_err_t handle_debug_uart_set(httpd_req_t *req)
     cJSON_Delete(root);
 
     char *out = mn_reconfig_uart_ex(baud, rx_inv, tx_inv, stop_bits);
-    if (!out) return httpd_resp_send_500(req);
     httpd_resp_set_type(req, "application/json");
     SET_NO_CACHE(req);
-    httpd_resp_send(req, out, strlen(out));
-    free(out);
+    /* Robustesse : meme si la composition JSON echoue (OOM en mode AP + web + polling),
+     * la reconfig UART a deja ete appliquee, donc on repond 200 avec un corps minimal
+     * plutot qu'un 500 qui ferait croire a un echec cote interface. */
+    if (out) {
+        httpd_resp_send(req, out, strlen(out));
+        free(out);
+    } else {
+        httpd_resp_send(req, "{\"ok\":true}", HTTPD_RESP_USE_STRLEN);
+    }
     return ESP_OK;
 }
 

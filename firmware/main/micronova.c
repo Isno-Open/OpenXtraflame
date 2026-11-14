@@ -30,6 +30,7 @@
 #include "params_diff.h"
 #include "driver/uart.h"
 #include "driver/gpio.h"
+#include "soc/gpio_struct.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -1100,13 +1101,21 @@ esp_err_t micronova_start(void)
 
 #if STOVE_SINGLE_WIRE
     /* Bus a UN fil DATA via un level-shifter bidirectionnel a drain ouvert : le TX doit
-     * etre en DRAIN OUVERT pour que le poele puisse tirer la ligne pendant la reception
-     * sans combattre un etage push-pull. Au repos, le pull-up tient la ligne HIGH.
-     * L'UART reste route sur la broche (le mode OD ne change que l'etage de sortie) ;
-     * l'echo de nos propres octets est deja filtre dans mn_do_transaction (echo-skip). */
-    ESP_ERROR_CHECK(gpio_set_direction((gpio_num_t)STOVE_UART_TX_PIN, GPIO_MODE_INPUT_OUTPUT_OD));
-    ESP_ERROR_CHECK(gpio_set_pull_mode((gpio_num_t)STOVE_UART_TX_PIN, GPIO_PULLUP_ONLY));
-    ESP_LOGI(TAG, "GPIO%d (TX) = drain ouvert [bus 1 fil bidirectionnel]", STOVE_UART_TX_PIN);
+     * etre en DRAIN OUVERT pour que le poele puisse tirer la ligne pendant la reception.
+     * Au repos, le pull-up tient la ligne HIGH ; l'echo de nos octets est filtre (echo-skip).
+     *
+     * ON NE PASSE PAS par gpio_set_direction(..._OD) : selon la version d'IDF il remet la
+     * broche en fonction GPIO et DEBRANCHE le signal UART du GPIO matrix -> le TX devient
+     * muet et, pin tenue basse, on ne lit plus que des 0x00 (symptome observe au banc).
+     * On garde donc le routage pose par uart_set_pin et on n'active QUE le bit open-drain
+     * du pad (registre) + le pull-up. Ainsi le signal UART continue de piloter la broche,
+     * mais en drain ouvert. */
+    gpio_pulldown_dis((gpio_num_t)STOVE_UART_TX_PIN);
+    gpio_pullup_en((gpio_num_t)STOVE_UART_TX_PIN);
+    GPIO.pin[STOVE_UART_TX_PIN].pad_driver = 1;   /* open-drain, sans toucher au matrix UART */
+    vTaskDelay(pdMS_TO_TICKS(5));
+    ESP_LOGI(TAG, "GPIO%d (TX) open-drain via pad_driver (route UART preserve) ; niveau idle lu=%d (attendu 1=relache)",
+             STOVE_UART_TX_PIN, gpio_get_level((gpio_num_t)STOVE_UART_TX_PIN));
 #endif
 
     /* Bus open-collector: force le pull-up interne sur RX pour maintenir l'idle

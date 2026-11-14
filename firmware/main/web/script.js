@@ -663,14 +663,16 @@ document.addEventListener('DOMContentLoaded', () => {
         invChk.disabled = true;
         if (span) span.textContent = '⏳';
         try {
+            /* On n'inverse QUE le RX (lecture) : inverser le TX casserait l'etage drain
+             * ouvert du bus a un fil (il tiendrait la ligne basse). tx_inv reste false. */
             const r = await fetch('/debug/uart-set', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({rx_inv: on, tx_inv: on}),
+                body: JSON.stringify({rx_inv: on, tx_inv: false}),
             });
             if (!r.ok) throw new Error('HTTP ' + r.status);
-            if (span) span.textContent = on ? '✅ inversion ON' : '✅ inversion OFF';
-            toast('Inversion de ligne ' + (on ? 'activée' : 'désactivée'), 'success', 4000);
+            if (span) span.textContent = on ? '✅ RX inversé' : '✅ RX normal';
+            toast('Inversion RX ' + (on ? 'activée' : 'désactivée'), 'success', 4000);
         } catch (e) {
             if (span) span.textContent = '❌ erreur';
             toast('Erreur inversion : ' + e.message, 'error');
