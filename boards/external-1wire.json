@@ -1,0 +1,19 @@
+{
+  "_comment": [
+    "ESP32 d'appoint cable sur un poele Micronova a LIGNE DATA UNIQUE (half-duplex,",
+    "type 'White Label' / connecteur generique CN13/SERIALE), via une interface a",
+    "optocoupleur + enable_rx, EXACTEMENT comme le fait la communaute : composant",
+    "ESPHome 'micronova' (https://esphome.io/components/micronova/) et schema",
+    "philibertc/micronova_controller. Differe de 'external' (2 fils TX/RX distincts,",
+    "reflash du module Black Label) : ici le bus n'a qu'un fil DATA, donc enable_rx",
+    "pilote le sens (HIGH = emission, LOW = repos/reception), RX avec pull-up.",
+    "Micronova = 1200 8N2 ; micronova.c force ce reglage au boot. Broches cote ESP :",
+    "tx=GPIO23, rx=GPIO19 (pull-up), enable_rx=GPIO22. NON encore valide sur un vrai",
+    "poele. Une carte nommee, pas lue."
+  ],
+  "id": "external-1wire",
+  "name": "external-esp32-1fil",
+  "mcu": "esp32",
+  "uart": { "num": 1, "tx": 23, "rx": 19, "enable_rx": 22, "half_duplex": true, "baud": 1200, "data_bits": 8, "parity": "none", "stop_bits": 2 },
+  "ui": { "button": 0, "button_active_low": true, "led": 2, "led_active_high": true }
+}

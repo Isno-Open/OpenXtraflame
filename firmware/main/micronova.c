@@ -428,9 +428,18 @@ static bool mn_do_transaction(uint8_t cmd, uint16_t reg_addr, uint8_t value_to_w
         tx_len = 2;
     }
 
-    uart_flush(STOVE_UART_NUM);
+    uart_flush(STOVE_UART_NUM);   /* draine le RX obsolete : on ecoute (enable_rx LOW) */
+#if STOVE_HALF_DUPLEX
+    /* Bus a UN fil : on prend la ligne en EMISSION le temps d'ecrire la requete,
+     * puis on la rend a la RECEPTION avant de lire. Sequence ESPHome micronova :
+     * enable_rx HIGH -> write -> flush(wait tx) -> enable_rx LOW -> read. */
+    gpio_set_level((gpio_num_t)STOVE_ENABLE_RX_PIN, 1);
+#endif
     uart_write_bytes(STOVE_UART_NUM, (const char *)tx, tx_len);
     uart_wait_tx_done(STOVE_UART_NUM, pdMS_TO_TICKS(50));
+#if STOVE_HALF_DUPLEX
+    gpio_set_level((gpio_num_t)STOVE_ENABLE_RX_PIN, 0);
+#endif
 
     if (xSemaphoreTake(mn_mutex, pdMS_TO_TICKS(50)) == pdTRUE) {
         mn_snapshot.tx_frames_count++;
@@ -1086,6 +1095,20 @@ esp_err_t micronova_start(void)
     ESP_ERROR_CHECK(gpio_pullup_en((gpio_num_t)STOVE_UART_RX_PIN));
     ESP_LOGI(TAG, "GPIO%d (RX) pull-up enabled", STOVE_UART_RX_PIN);
 
+#if STOVE_HALF_DUPLEX
+    /* Bus Micronova a UN SEUL fil DATA (half-duplex) derriere une interface a
+     * optocoupleur : enable_rx pilote le sens. Repos = LOW (on ecoute) ; on ne
+     * leve HIGH (emission) que le temps d'ecrire une requete, cf mn_do_transaction.
+     * C'est le mode du composant ESPHome 'micronova' et du schema philibertc. */
+    gpio_config_t enable_rx_cfg = {
+        .pin_bit_mask = (1ULL << STOVE_ENABLE_RX_PIN),
+        .mode = GPIO_MODE_OUTPUT,
+    };
+    ESP_ERROR_CHECK(gpio_config(&enable_rx_cfg));
+    ESP_ERROR_CHECK(gpio_set_level((gpio_num_t)STOVE_ENABLE_RX_PIN, 0));
+    ESP_LOGI(TAG, "GPIO%d (enable_rx) = LOW (repos/reception) [half-duplex 1 fil]",
+             STOVE_ENABLE_RX_PIN);
+#else
     /* GPIO22 = probable ENABLE d'un transceiver/level-shifter côté bus poêle
      * (=observé HIGH dans la capture QEMU du firmware original 2026-07-03).
      * Si ce pin n'est pas driven HIGH, le canal RX/TX peut être electriquement
@@ -1097,6 +1120,7 @@ esp_err_t micronova_start(void)
     ESP_ERROR_CHECK(gpio_config(&gpio22_cfg));
     ESP_ERROR_CHECK(gpio_set_level((gpio_num_t)22, 1));
     ESP_LOGI(TAG, "GPIO22 driven HIGH (=probable transceiver enable)");
+#endif
 
     mn_mutex = xSemaphoreCreateMutex();
     memset(&mn_snapshot, 0, sizeof(mn_snapshot));
