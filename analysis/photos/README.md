@@ -66,11 +66,18 @@ Câble branché sur le port TA du POELE (=côté main board Micronova). Wires vi
 Label `TA` visible sur le boîtier du poêle où le câble entre. TA = Termostato Ambiente en italien.
 
 ### 12_serial_4pin_cable_colors.jpg
-Zoom sur les 4 wires du câble SERIAL côté module :
-- Pin 1 (=gauche) : 🟢 VERT = GND
-- Pin 2 : 🟤 MARRON = TX module (=confirmé)
-- Pin 3 : ⚪ BLANC = probable RX module
-- Pin 4 (=droite) : 🟡 JAUNE = probable VCC +12V (=DANGER, ne pas toucher)
+Zoom sur les 4 wires du câble SERIAL côté module.
+
+⚠️ **CORRECTION 2026-11-14 : l'étiquetage « TX/RX » ci-dessous était FAUX.** Le bus
+Micronova est une **seule ligne DATA**, pas une paire TX/RX (verifie sur les references
+communaute : composant ESPHome `micronova`, `philibertc/micronova_controller`). Le
+connecteur 4 broches standard porte **GND / 5V / 20V / DATA** : une seule DATA, et DEUX
+alimentations (dont le 20V, dangereux). L'affectation exacte des couleurs reste **A
+CONFIRMER au banc** (ESP32 + level shifter sur la ligne DATA, commande en cours).
+- Pin 1 (=gauche) : 🟢 VERT = GND (confirme)
+- Pin 2 : 🟤 MARRON = DATA, ou une alim (5V/20V) : a confirmer (etait note « TX », faux)
+- Pin 3 : ⚪ BLANC = DATA, ou une alim (5V/20V) : a confirmer (etait note « RX », faux)
+- Pin 4 (=droite) : 🟡 JAUNE = alim (5V ou 20V) : a confirmer. ⚠️ DANGER si 20V, ne jamais relier a l'ESP32.
 
 ## Bouton et setup dump
 
