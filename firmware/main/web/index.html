@@ -434,6 +434,21 @@
 
         <div class="card">
             <div class="card-header">
+                <h3>Réglage série (dépannage)</h3>
+            </div>
+            <p class="hint">Si des trames défilent au-dessus mais que les valeurs ne décodent pas (checksums faux), l'inversion de ligne du bus est probablement à l'envers pour ton interface (un level-shifter non inverseur n'inverse pas, un étage à transistor si). Bascule-la et observe : le bon réglage fait apparaître des valeurs cohérentes en quelques secondes. Appliqué à chaud, sans reboot.</p>
+            <div class="button-row">
+                <label class="toggle">
+                    <input id="serial-invert" type="checkbox">
+                    <span class="toggle-slider"></span>
+                    <span>Inversion de ligne (0x24)</span>
+                </label>
+                <span class="hint" id="serial-invert-result" style="margin-left:auto"></span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
                 <h3>Logs firmware (=UART miniterm)</h3>
                 <span class="hint" id="logs-counter">0 octets</span>
             </div>

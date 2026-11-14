@@ -655,6 +655,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('scan').addEventListener('click', scan);
 
+    /* Reglage serie : bascule l'inversion de ligne UART a chaud (depannage d'interface) */
+    const invChk = $('serial-invert');
+    if (invChk) invChk.addEventListener('change', async () => {
+        const span = $('serial-invert-result');
+        const on = invChk.checked;
+        invChk.disabled = true;
+        if (span) span.textContent = '⏳';
+        try {
+            const r = await fetch('/debug/uart-set', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({rx_inv: on, tx_inv: on}),
+            });
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            if (span) span.textContent = on ? '✅ inversion ON' : '✅ inversion OFF';
+            toast('Inversion de ligne ' + (on ? 'activée' : 'désactivée'), 'success', 4000);
+        } catch (e) {
+            if (span) span.textContent = '❌ erreur';
+            toast('Erreur inversion : ' + e.message, 'error');
+        } finally {
+            invChk.disabled = false;
+        }
+    });
+
     /* Safe mode : bouton d'urgence pour boot minimal (=juste OTA) */
     const safeBtn = $('safe-mode-btn');
     if (safeBtn) safeBtn.addEventListener('click', async () => {
