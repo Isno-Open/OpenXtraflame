@@ -37,16 +37,19 @@ diagnostic série du web avant de câbler. // The SERIAL pinout is NOT universal
 1=GND, 2=+5V, 3=+12V, 4=DATA; DATA is the pin that toggles (the 5 V / 12 V pins are steady
 supplies). Always identify DATA before wiring.
 
-⚠️ **Le +12V est dangereux et le montage DIY n'est PAS protégé.** Relier le +12 V (ou le
-+5 V fixe) à l'ESP32 ou au côté basse tension du level-shifter le détruit. Un branchement
-direct (shifter + fils) n'a **aucune protection** contre une inversion de fils, une
-surtension ou une décharge : une erreur de câblage est fatale pour l'ESP. L'adaptateur isolé
-du projet (carte `micronova-iso-adapter`, isolateur + protections d'entrée) est fait pour
-retirer ce risque ; en DIY, vérifier deux fois avant de mettre sous tension. // The +12 V is
-dangerous and a DIY build has NO protection. Wiring the +12 V (or the steady +5 V) to the
-ESP32 or the low-voltage side destroys it. A direct build (shifter + wires) has no protection
-against reversed wires, over-voltage or ESD. The project's isolated adapter removes that risk;
-in DIY, double-check before powering up.
+⚠️ **Tout le bus est en 5 V et l'ESP32 est en 3,3 V : même le 5 V le grille.** Les GPIO de
+l'ESP32 ne tolèrent PAS le 5 V, donc relier **n'importe quelle broche 5 V (la DATA comme
+l'alim) directement à l'ESP32 le détruit** ; le +12 V est pire encore (il détruit aussi le
+côté bas du shifter). **Rien du poêle ne doit toucher l'ESP32 en direct : tout transite par
+le level-shifter.** Et un montage DIY n'a **AUCUNE protection** contre une inversion de fils,
+une surtension ou une décharge : une erreur de câblage est fatale. L'adaptateur isolé du
+projet (carte `micronova-iso-adapter`, isolateur + protections d'entrée) retire ce risque ;
+en DIY, vérifier deux fois avant de mettre sous tension. // The whole bus is 5 V and the ESP32
+is 3.3 V only: even the 5 V destroys it. ESP32 GPIOs are NOT 5 V tolerant, so wiring any 5 V
+pin (DATA or supply) directly to the ESP32 destroys it; the +12 V is worse (it also kills the
+low side of the shifter). Nothing from the stove should touch the ESP32 directly: everything
+goes through the level shifter. A DIY build has NO protection against reversed wires,
+over-voltage or ESD. The project's isolated adapter removes that risk.
 
 **Inversion de ligne selon l'interface.** Un poêle Black Label attend une **inversion RX**
 (le firmware d'origine utilise `RXD_INV`). Avec un level-shifter **passif non inverseur**, on

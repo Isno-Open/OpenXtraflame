@@ -28,6 +28,6 @@
   "id": "external-swire",
   "name": "external-esp32-1fil-bidir",
   "mcu": "esp32",
-  "uart": { "num": 1, "tx": 23, "rx": 5, "single_wire": true, "line_invert": false, "baud": 1200, "data_bits": 8, "parity": "none", "stop_bits": 2 },
+  "uart": { "num": 1, "tx": 23, "rx": 5, "single_wire": true, "rx_invert": true, "tx_invert": false, "baud": 1200, "data_bits": 8, "parity": "none", "stop_bits": 2 },
   "ui": { "button": 0, "button_active_low": true, "led": 2, "led_active_high": true }
 }

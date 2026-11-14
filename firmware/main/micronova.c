@@ -850,7 +850,10 @@ char *mn_reconfig_uart(int baud, int rx_inv, int tx_inv)
 char *mn_reconfig_uart_ex(int baud, int rx_inv, int tx_inv, int stop_bits)
 {
     mn_sniffer_pause = true;
-    vTaskDelay(pdMS_TO_TICKS(200));
+    /* La tache maitre peut etre dans un uart_read_bytes bloquant jusqu'a MN_TIMEOUT_MS
+     * (1000 ms). On attend qu'elle ait fini sa transaction en cours AVANT de toucher a la
+     * config UART, sinon course -> reset (le symptome "Failed to fetch" cote navigateur). */
+    vTaskDelay(pdMS_TO_TICKS(MN_TIMEOUT_MS + 100));
 
     if (baud >= 1200 && baud <= 460800) {
         uart_set_baudrate(STOVE_UART_NUM, baud);
@@ -1068,15 +1071,14 @@ esp_err_t micronova_start(void)
      * uart_set_pin() peut interférer avec le bit d'inversion du GPIO matrix. */
     ESP_ERROR_CHECK(uart_param_config(STOVE_UART_NUM, &cfg));
 
-#if STOVE_LINE_INVERT
-    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM,
-                                          UART_SIGNAL_RXD_INV | UART_SIGNAL_TXD_INV));
-    ESP_LOGI(TAG, "UART%d line inversion set (0x24 = RXD_INV|TXD_INV)", STOVE_UART_NUM);
-#else
-    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM, 0));
-    ESP_LOGI(TAG, "UART%d line inversion OFF (level-shifter bidirectionnel non inverseur)",
-             STOVE_UART_NUM);
-#endif
+    /* Inversion RX et TX INDEPENDANTES (cf board_pins.h). Un bus a un fil avec level-shifter
+     * passif veut RX inverse (comme l'original Black Label) mais TX NON inverse (le TX en
+     * drain ouvert, inverse, tiendrait la ligne basse). */
+    uint32_t boot_inv = (STOVE_RX_INVERT ? UART_SIGNAL_RXD_INV : 0)
+                      | (STOVE_TX_INVERT ? UART_SIGNAL_TXD_INV : 0);
+    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM, boot_inv));
+    ESP_LOGI(TAG, "UART%d inversion RX=%d TX=%d (mask=0x%02lx)", STOVE_UART_NUM,
+             (int)STOVE_RX_INVERT, (int)STOVE_TX_INVERT, (unsigned long)boot_inv);
 
     ESP_ERROR_CHECK(uart_set_pin(STOVE_UART_NUM,
                                  STOVE_UART_TX_PIN,
@@ -1091,13 +1093,10 @@ esp_err_t micronova_start(void)
 
     /* Re-poser l'inversion APRÈS uart_set_pin, au cas où v5.x l'aurait clearée.
      * L'appel est idempotent. */
-#if STOVE_LINE_INVERT
-    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM,
-                                          UART_SIGNAL_RXD_INV | UART_SIGNAL_TXD_INV));
-    ESP_LOGI(TAG, "UART%d line inversion re-applied post pin/driver", STOVE_UART_NUM);
-#else
-    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM, 0));
-#endif
+    /* Re-pose l'inversion APRES uart_set_pin (ESP-IDF v5.x peut l'avoir clearee). */
+    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM, boot_inv));
+    ESP_LOGI(TAG, "UART%d inversion re-appliquee post pin/driver (mask=0x%02lx)",
+             STOVE_UART_NUM, (unsigned long)boot_inv);
 
 #if STOVE_SINGLE_WIRE
     /* Bus a UN fil DATA via un level-shifter bidirectionnel a drain ouvert : le TX doit
