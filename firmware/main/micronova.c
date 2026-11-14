@@ -1067,9 +1067,15 @@ esp_err_t micronova_start(void)
      * uart_set_pin() peut interférer avec le bit d'inversion du GPIO matrix. */
     ESP_ERROR_CHECK(uart_param_config(STOVE_UART_NUM, &cfg));
 
+#if STOVE_LINE_INVERT
     ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM,
                                           UART_SIGNAL_RXD_INV | UART_SIGNAL_TXD_INV));
     ESP_LOGI(TAG, "UART%d line inversion set (0x24 = RXD_INV|TXD_INV)", STOVE_UART_NUM);
+#else
+    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM, 0));
+    ESP_LOGI(TAG, "UART%d line inversion OFF (level-shifter bidirectionnel non inverseur)",
+             STOVE_UART_NUM);
+#endif
 
     ESP_ERROR_CHECK(uart_set_pin(STOVE_UART_NUM,
                                  STOVE_UART_TX_PIN,
@@ -1083,10 +1089,25 @@ esp_err_t micronova_start(void)
                                         0, NULL, 0));
 
     /* Re-poser l'inversion APRÈS uart_set_pin, au cas où v5.x l'aurait clearée.
-     * L'appel est idempotent et fixe CONF0.RXD_INV=1 CONF0.TXD_INV=1. */
+     * L'appel est idempotent. */
+#if STOVE_LINE_INVERT
     ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM,
                                           UART_SIGNAL_RXD_INV | UART_SIGNAL_TXD_INV));
     ESP_LOGI(TAG, "UART%d line inversion re-applied post pin/driver", STOVE_UART_NUM);
+#else
+    ESP_ERROR_CHECK(uart_set_line_inverse(STOVE_UART_NUM, 0));
+#endif
+
+#if STOVE_SINGLE_WIRE
+    /* Bus a UN fil DATA via un level-shifter bidirectionnel a drain ouvert : le TX doit
+     * etre en DRAIN OUVERT pour que le poele puisse tirer la ligne pendant la reception
+     * sans combattre un etage push-pull. Au repos, le pull-up tient la ligne HIGH.
+     * L'UART reste route sur la broche (le mode OD ne change que l'etage de sortie) ;
+     * l'echo de nos propres octets est deja filtre dans mn_do_transaction (echo-skip). */
+    ESP_ERROR_CHECK(gpio_set_direction((gpio_num_t)STOVE_UART_TX_PIN, GPIO_MODE_INPUT_OUTPUT_OD));
+    ESP_ERROR_CHECK(gpio_set_pull_mode((gpio_num_t)STOVE_UART_TX_PIN, GPIO_PULLUP_ONLY));
+    ESP_LOGI(TAG, "GPIO%d (TX) = drain ouvert [bus 1 fil bidirectionnel]", STOVE_UART_TX_PIN);
+#endif
 
     /* Bus open-collector: force le pull-up interne sur RX pour maintenir l'idle
      * HIGH quand le poêle ne parle pas. uart_set_pin() désactive les pull-ups
