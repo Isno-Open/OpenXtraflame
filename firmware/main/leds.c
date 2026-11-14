@@ -10,6 +10,14 @@
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/event_groups.h"
+
+/* La LED d'etat unique reflete la COMMUNICATION POELE : fixe = comm valide,
+ * clignote = pas de comm valide (mauvais branchement / mauvais sens du connecteur,
+ * poele muet). Elle lit directement STOVE_ONLINE pour etre independante du Wi-Fi/MQTT :
+ * au banc on branche l'adaptateur et on retourne le connecteur jusqu'a la LED fixe. */
+extern EventGroupHandle_t app_event_group;
+extern const int STOVE_ONLINE_BIT;
 
 static led_state_t current_state = LED_STATE_UNKNOWN;
 
@@ -23,10 +31,35 @@ static void gpio_output(int pin)
     gpio_config(&io);
 }
 
+#if STATUS_LED_ENABLED
+static void status_led_task(void *arg)
+{
+    bool phase = false;
+    for (;;) {
+        EventBits_t bits = app_event_group ? xEventGroupGetBits(app_event_group) : 0;
+        bool stove_ok = (bits & STOVE_ONLINE_BIT) != 0;
+        int on;
+        if (stove_ok) {
+            on = 1;                 /* comm poele valide : LED fixe */
+        } else {
+            phase = !phase;         /* pas de comm valide : clignotement ~2 Hz */
+            on = phase ? 1 : 0;
+        }
+    #if STATUS_LED_INVERTED
+        gpio_set_level(STATUS_LED_PIN, on ? 0 : 1);
+    #else
+        gpio_set_level(STATUS_LED_PIN, on ? 1 : 0);
+    #endif
+        vTaskDelay(pdMS_TO_TICKS(250));
+    }
+}
+#endif
+
 void leds_init(void)
 {
 #if STATUS_LED_ENABLED
     gpio_output(STATUS_LED_PIN);
+    xTaskCreate(status_led_task, "status_led", 2048, NULL, 2, NULL);
 #endif
 #ifdef TARGET_BLACKLABEL
     gpio_output(LED_POWER_PIN);
@@ -51,15 +84,8 @@ void leds_set_state(led_state_t state)
 {
     current_state = state;
 
-#if STATUS_LED_ENABLED
-    /* Simple on/off for the single onboard LED - could be blink patterns */
-    int on = (state == LED_STATE_ALL_OK) ? 1 : 0;
-    #if STATUS_LED_INVERTED
-    gpio_set_level(STATUS_LED_PIN, on ? 0 : 1);
-    #else
-    gpio_set_level(STATUS_LED_PIN, on ? 1 : 0);
-    #endif
-#endif
+    /* La LED d'etat unique (STATUS_LED) est pilotee par status_led_task selon la
+     * comm poele (fixe = OK, clignote = pas bon), pas ici. */
 
 #ifdef TARGET_BLACKLABEL
     /* Reuse Extraflame's 4 LEDs as our own status */
