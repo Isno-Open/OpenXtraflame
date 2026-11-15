@@ -41,15 +41,23 @@ supplies). Always identify DATA before wiring.
 l'ESP32 ne tolèrent PAS le 5 V, donc relier **n'importe quelle broche 5 V (la DATA comme
 l'alim) directement à l'ESP32 le détruit** ; le +12 V est pire encore (il détruit aussi le
 côté bas du shifter). **Rien du poêle ne doit toucher l'ESP32 en direct : tout transite par
-le level-shifter.** Et un montage DIY n'a **AUCUNE protection** contre une inversion de fils,
-une surtension ou une décharge : une erreur de câblage est fatale. L'adaptateur isolé du
+le level-shifter.** Mais attention : **le level-shifter n'est qu'un TRADUCTEUR de niveau,
+pas une protection ni une isolation.** Même avec lui, l'ESP grille si on met du 5 V sur sa
+référence `LV` (au lieu du 3,3 V), si le +12 V atteint le côté HV, ou sur un transitoire du
+bus : les MOSFET du BSS138 ne bloquent pas une surtension, et il n'y a ni TVS ni clamp. Un
+montage DIY n'a donc **AUCUNE protection** contre une inversion de fils, une surtension ou
+une décharge : une erreur de câblage est fatale. L'adaptateur isolé du
 projet (carte `micronova-iso-adapter`, isolateur + protections d'entrée) retire ce risque ;
 en DIY, vérifier deux fois avant de mettre sous tension. // The whole bus is 5 V and the ESP32
 is 3.3 V only: even the 5 V destroys it. ESP32 GPIOs are NOT 5 V tolerant, so wiring any 5 V
 pin (DATA or supply) directly to the ESP32 destroys it; the +12 V is worse (it also kills the
 low side of the shifter). Nothing from the stove should touch the ESP32 directly: everything
-goes through the level shifter. A DIY build has NO protection against reversed wires,
-over-voltage or ESD. The project's isolated adapter removes that risk.
+goes through the level shifter. But beware: the level shifter is only a level TRANSLATOR,
+not protection nor isolation. Even with it, the ESP is destroyed if 5 V reaches its `LV`
+reference (instead of 3.3 V), if the +12 V reaches the HV side, or on a bus transient: the
+BSS138 MOSFETs do not block over-voltage, and there is no TVS or clamp. A DIY build has NO
+protection against reversed wires, over-voltage or ESD. The project's isolated adapter removes
+that risk.
 
 **Inversion de ligne selon l'interface.** Un poêle Black Label attend une **inversion RX**
 (le firmware d'origine utilise `RXD_INV`). Avec un level-shifter **passif non inverseur**, on
