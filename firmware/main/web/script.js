@@ -655,31 +655,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('scan').addEventListener('click', scan);
 
-    /* Reglage serie : bascule l'inversion de ligne UART a chaud (depannage d'interface) */
-    const invChk = $('serial-invert');
-    if (invChk) invChk.addEventListener('change', async () => {
+    /* Reglage serie : bascule l'inversion de ligne UART a chaud (depannage d'interface).
+     * Deux switches independants (RX et TX) : sur un bus a un fil ils vont normalement
+     * ensemble, mais on les expose separement pour que le testeur TROUVE la bonne
+     * combinaison a la mesure (les deux OFF, ou les deux ON = 0x24), au lieu de parier. */
+    const invRx = $('serial-invert-rx');
+    const invTx = $('serial-invert-tx');
+    async function applyInversion() {
         const span = $('serial-invert-result');
-        const on = invChk.checked;
-        invChk.disabled = true;
+        const rxOn = !!(invRx && invRx.checked);
+        const txOn = !!(invTx && invTx.checked);
+        if (invRx) invRx.disabled = true;
+        if (invTx) invTx.disabled = true;
         if (span) span.textContent = '⏳';
         try {
-            /* On n'inverse QUE le RX (lecture) : inverser le TX casserait l'etage drain
-             * ouvert du bus a un fil (il tiendrait la ligne basse). tx_inv reste false. */
             const r = await fetch('/debug/uart-set', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({rx_inv: on, tx_inv: false}),
+                body: JSON.stringify({rx_inv: rxOn, tx_inv: txOn}),
             });
             if (!r.ok) throw new Error('HTTP ' + r.status);
-            if (span) span.textContent = on ? '✅ RX inversé' : '✅ RX normal';
-            toast('Inversion RX ' + (on ? 'activée' : 'désactivée'), 'success', 4000);
+            const label = 'RX ' + (rxOn ? 'inversé' : 'normal') + ' · TX ' + (txOn ? 'inversé' : 'normal');
+            if (span) span.textContent = '✅ ' + label;
+            toast('Inversion appliquée (' + label + ')', 'success', 4000);
         } catch (e) {
             if (span) span.textContent = '❌ erreur';
             toast('Erreur inversion : ' + e.message, 'error');
         } finally {
-            invChk.disabled = false;
+            if (invRx) invRx.disabled = false;
+            if (invTx) invTx.disabled = false;
         }
-    });
+    }
+    if (invRx) invRx.addEventListener('change', applyInversion);
+    if (invTx) invTx.addEventListener('change', applyInversion);
 
     /* Safe mode : bouton d'urgence pour boot minimal (=juste OTA) */
     const safeBtn = $('safe-mode-btn');
