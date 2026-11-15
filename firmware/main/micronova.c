@@ -850,10 +850,10 @@ char *mn_reconfig_uart(int baud, int rx_inv, int tx_inv)
 char *mn_reconfig_uart_ex(int baud, int rx_inv, int tx_inv, int stop_bits)
 {
     mn_sniffer_pause = true;
-    /* La tache maitre peut etre dans un uart_read_bytes bloquant jusqu'a MN_TIMEOUT_MS
-     * (1000 ms). On attend qu'elle ait fini sa transaction en cours AVANT de toucher a la
-     * config UART, sinon course -> reset (le symptome "Failed to fetch" cote navigateur). */
-    vTaskDelay(pdMS_TO_TICKS(MN_TIMEOUT_MS + 100));
+    /* Laisse la tache maitre finir sa transaction en cours avant de reconfigurer l'UART.
+     * (Le "Failed to fetch" du switch d'inversion venait en fait d'un max_uri_handlers trop
+     * petit, pas d'une course ; 300 ms suffisent largement pour une transaction normale.) */
+    vTaskDelay(pdMS_TO_TICKS(300));
 
     if (baud >= 1200 && baud <= 460800) {
         uart_set_baudrate(STOVE_UART_NUM, baud);

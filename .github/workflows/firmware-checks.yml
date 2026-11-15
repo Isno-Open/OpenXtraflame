@@ -1,0 +1,15 @@
+name: firmware-checks
+
+# Controles statiques du firmware, legers (sans build ESP-IDF).
+on:
+  push:
+  pull_request:
+
+jobs:
+  uri-handlers:
+    name: routes HTTP <= max_uri_handlers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: max_uri_handlers suffisant pour toutes les routes
+        run: python3 tools/check_uri_handlers.py

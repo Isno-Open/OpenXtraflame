@@ -1215,11 +1215,13 @@ esp_err_t web_ui_start(app_config_t *cfg)
      * Sans ça, l'étoile est literal et POST /api/stove/power/3 -> 404.
      * Bug latent : HA passe par MQTT donc marche, mais l'UI web POST 404. */
     hd.uri_match_fn        = httpd_uri_match_wildcard;
-    hd.max_uri_handlers   = 40;   /* room for the current 34 routes + margin;
-                                   * remember to grow this whenever a handler
-                                   * is added, ESP-IDF silently drops the
-                                   * overflow entries with only a W log line
-                                   * that's easy to miss. */
+    hd.max_uri_handlers   = 56;   /* room for the current 50 routes + margin.
+                                   * ATTENTION : c'etait 40 pour 34 routes, mais on est
+                                   * passe a 50 routes sans grossir cette valeur -> les 10
+                                   * routes en trop (dont /debug/uart-set, le switch
+                                   * d'inversion) n'etaient PAS enregistrees -> "Failed to
+                                   * fetch". ESP-IDF droppe le surplus en silence (juste un
+                                   * W). Toujours garder cette valeur > nombre de routes. */
     hd.stack_size         = 6144; /* default 4096 stack-overflows during esp_ota_end()
                                    * SHA256 verify at the end of an OTA upload (=beta15
                                    * dump). 6144 leaves headroom without triggering the
