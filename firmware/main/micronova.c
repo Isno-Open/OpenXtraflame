@@ -456,28 +456,12 @@ static bool mn_do_transaction(uint8_t cmd, uint16_t reg_addr, uint8_t value_to_w
                  tx[0], tx[1], reg_addr, bank);
     }
 
+    /* Lecture d'abord des 2 octets. Si les 2 premiers ressemblent a un echo
+     * [loc, addr], on lit 2 octets de plus pour obtenir la vraie reponse.
+     * C'est le comportement du firmware d'origine Black Label (decompile), PROUVE
+     * sur un vrai poele via la cible 'blacklabel' : saut d'echo CONDITIONNEL, pas un
+     * rejet systematique de tx_len octets (ce dernier desaligne si la ligne n'echo pas). */
     uint8_t rx[4] = {0};
-#if STOVE_SINGLE_WIRE && !STOVE_HALF_DUPLEX
-    /* FIL PARTAGE PASSIF (BSS138, pas de ligne enable) : notre propre TX est revenu
-     * en ECHO sur le RX pendant l'emission. On ne le reconnait PAS par motif (fragile
-     * des que les niveaux sont marginaux : des octets abimes ne ressemblent plus a
-     * [loc, addr] et on les prend pour la reponse, d'ou les "bad additive cksum").
-     * On fait comme un bus a un fil propre : on laisse un temps de retournement (le
-     * poele ne repond pas tout de suite, Philibert attend 60-80 ms), puis on LIT et
-     * on JETTE exactement tx_len octets (l'echo), puis on lit la vraie reponse. */
-    vTaskDelay(pdMS_TO_TICKS(70));
-    uint8_t echo_discard[4];
-    int echoed = uart_read_bytes(STOVE_UART_NUM, echo_discard, tx_len, pdMS_TO_TICKS(MN_TIMEOUT_MS));
-    ESP_LOGD(TAG, "echo jete %d/%d octets [0x%02X 0x%02X]", echoed, tx_len,
-             echo_discard[0], tx_len > 1 ? echo_discard[1] : 0);
-    int got = uart_read_bytes(STOVE_UART_NUM, rx, 2, pdMS_TO_TICKS(MN_TIMEOUT_MS));
-    if (got != 2) {
-        ESP_LOGW(TAG, "no reply reg=0x%03X (got %d/2, apres echo jete)", reg_addr, got);
-        return false;
-    }
-#else
-    /* Interface a ligne enable (optocoupleur) ou 2 fils : pas d'echo a filtrer en
-     * temps normal. On garde la detection par motif par securite. */
     int got = uart_read_bytes(STOVE_UART_NUM, rx, 2, pdMS_TO_TICKS(MN_TIMEOUT_MS));
     if (got != 2) {
         ESP_LOGW(TAG, "no reply reg=0x%03X (got %d/2)", reg_addr, got);
@@ -492,7 +476,6 @@ static bool mn_do_transaction(uint8_t cmd, uint16_t reg_addr, uint8_t value_to_w
             return false;
         }
     }
-#endif
 
     uint8_t cksum = rx[0];
     uint8_t value = rx[1];
