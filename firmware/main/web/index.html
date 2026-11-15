@@ -436,7 +436,7 @@
             <div class="card-header">
                 <h3>Réglage série (dépannage)</h3>
             </div>
-            <p class="hint">Si des trames défilent au-dessus mais que les valeurs ne décodent pas (checksums faux), l'inversion de ligne du bus est probablement à l'envers pour ton interface (un level-shifter non inverseur n'inverse pas, un étage à transistor si). Bascule-la et observe : le bon réglage fait apparaître des valeurs cohérentes en quelques secondes. Appliqué à chaud, sans reboot.</p>
+            <p class="hint">Si des trames défilent au-dessus mais que les valeurs ne décodent pas (avertissements « bad additive cksum »), c'est que l'inversion de LECTURE (RX) n'est pas la bonne pour ton poêle. Bascule ce réglage et observe : le bon décodage fait apparaître des valeurs cohérentes (températures, etc.) en quelques secondes. Seul le RX est inversé ici (le TX, en drain ouvert sur un bus à un fil, ne doit jamais l'être). Appliqué à chaud, sans reboot.</p>
             <div class="button-row">
                 <label class="toggle">
                     <input id="serial-invert" type="checkbox">
