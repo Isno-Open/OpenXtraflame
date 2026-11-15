@@ -456,15 +456,33 @@ static bool mn_do_transaction(uint8_t cmd, uint16_t reg_addr, uint8_t value_to_w
                  tx[0], tx[1], reg_addr, bank);
     }
 
-    /* Lecture d'abord des 2 octets. Si les 2 premiers ressemblent à un écho
-     * [loc, addr], on lit 2 octets de plus pour obtenir la vraie réponse. */
     uint8_t rx[4] = {0};
+#if STOVE_SINGLE_WIRE && !STOVE_HALF_DUPLEX
+    /* FIL PARTAGE PASSIF (BSS138, pas de ligne enable) : notre propre TX est revenu
+     * en ECHO sur le RX pendant l'emission. On ne le reconnait PAS par motif (fragile
+     * des que les niveaux sont marginaux : des octets abimes ne ressemblent plus a
+     * [loc, addr] et on les prend pour la reponse, d'ou les "bad additive cksum").
+     * On fait comme un bus a un fil propre : on laisse un temps de retournement (le
+     * poele ne repond pas tout de suite, Philibert attend 60-80 ms), puis on LIT et
+     * on JETTE exactement tx_len octets (l'echo), puis on lit la vraie reponse. */
+    vTaskDelay(pdMS_TO_TICKS(70));
+    uint8_t echo_discard[4];
+    int echoed = uart_read_bytes(STOVE_UART_NUM, echo_discard, tx_len, pdMS_TO_TICKS(MN_TIMEOUT_MS));
+    ESP_LOGD(TAG, "echo jete %d/%d octets [0x%02X 0x%02X]", echoed, tx_len,
+             echo_discard[0], tx_len > 1 ? echo_discard[1] : 0);
+    int got = uart_read_bytes(STOVE_UART_NUM, rx, 2, pdMS_TO_TICKS(MN_TIMEOUT_MS));
+    if (got != 2) {
+        ESP_LOGW(TAG, "no reply reg=0x%03X (got %d/2, apres echo jete)", reg_addr, got);
+        return false;
+    }
+#else
+    /* Interface a ligne enable (optocoupleur) ou 2 fils : pas d'echo a filtrer en
+     * temps normal. On garde la detection par motif par securite. */
     int got = uart_read_bytes(STOVE_UART_NUM, rx, 2, pdMS_TO_TICKS(MN_TIMEOUT_MS));
     if (got != 2) {
         ESP_LOGW(TAG, "no reply reg=0x%03X (got %d/2)", reg_addr, got);
         return false;
     }
-
     if (rx[0] == loc && rx[1] == addr) {
         ESP_LOGI(TAG, "RX echo detected [0x%02X 0x%02X], reading real reply",
                  rx[0], rx[1]);
@@ -474,6 +492,7 @@ static bool mn_do_transaction(uint8_t cmd, uint16_t reg_addr, uint8_t value_to_w
             return false;
         }
     }
+#endif
 
     uint8_t cksum = rx[0];
     uint8_t value = rx[1];
@@ -481,18 +500,25 @@ static bool mn_do_transaction(uint8_t cmd, uint16_t reg_addr, uint8_t value_to_w
     ESP_LOGI(TAG, "RX reply [cks=0x%02X val=0x%02X] reg=0x%03X (expected cks=0x%02X)",
              cksum, value, reg_addr, expected_cksum);
 
-    if (cksum != expected_cksum) {
+    bool cksum_ok = (cksum == expected_cksum);
+    if (!cksum_ok) {
         ESP_LOGW(TAG, "bad additive cksum reg=0x%03X: got 0x%02X expected 0x%02X (val=0x%02X)",
                  reg_addr, cksum, expected_cksum, value);
-        /* Not fatal - still record value for debugging */
     }
 
     /* Après un WRITE, ce qu'on lit c'est le tail de l'écho ([cks][val] du frame TX)
      * PAS une vraie reply avec la valeur stove. Écrire dans le shadow avec ces
      * bytes met la CHECKSUM (=0x24=36 pour A0/7F/05) au lieu de la valeur écrite.
-     * Solution : après write, mettre le shadow à la valeur qu'on VOULAIT écrire. */
+     * Solution : après write, mettre le shadow à la valeur qu'on VOULAIT écrire.
+     * Pour un READ : on ne nourrit le tableau de bord QUE si le checksum est bon.
+     * Sinon une trame mal alignee afficherait des valeurs absurdes (127,5 °C, etc.)
+     * qui font croire a tort que ca decode. Trame invalide = on garde l'ancienne. */
     if (reg_addr < MN_RAM_MAX) {
-        mn_set_ram((mn_ram_addr_t)reg_addr, is_write ? value_to_write : value);
+        if (is_write) {
+            mn_set_ram((mn_ram_addr_t)reg_addr, value_to_write);
+        } else if (cksum_ok) {
+            mn_set_ram((mn_ram_addr_t)reg_addr, value);
+        }
     }
     mn_debug_push(MN_DIR_TX_REPLY, addr, is_write ? value_to_write : value);
 
