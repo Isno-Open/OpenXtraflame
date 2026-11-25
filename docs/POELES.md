@@ -7,6 +7,8 @@ Sources, toutes lues telles quelles :
 - le type de chaque code de modèle vient de la table du même firmware ([MODELES.md](MODELES.md)) ;
 - les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023, dont les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres (`0012750020xx` = article `1275002`, Teodora Evo). Ce tarif nomme 81 des 124 articles. Six autres (Dahiana, Dahiana Plus) viennent de la liste « valable aussi pour » de leur notice, et un (Debby CX) du catalogue 2025. Vingt-sept sont **probables** : leur code est dans la même série qu'un modèle nommé, d'une autre couleur ou d'une autre version, et leur type concorde. Cette déduction est à confirmer, elle s'est déjà trompée une fois. Neuf restent sans nom : ils ne sont ni dans le tarif 2023 ni dans le catalogue 2025, ce sont donc sans doute des modèles sortis du catalogue avant 2023.
 
+Les noms sont ceux du tarif export : un même article peut s'appeler autrement selon le pays ou l'année, et certaines séries ne sont vendues que sur certains marchés.
+
 Seules les lignes de la Teodora Evo (type `I_VENT`) marquées dans REGISTRES.md ont été vérifiées sur un poêle. Tout le reste est relevé, non vérifié.
 
 Lecture : `loc 0x00` pour la RAM, `0x20` pour l'EEPROM ; écriture : `0x80` pour la RAM, `0xA0` pour l'EEPROM.

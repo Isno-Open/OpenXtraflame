@@ -29,14 +29,51 @@ Lecture : `loc 0x00` pour la RAM, `0x20` pour l'EEPROM ; écriture : `0x80` pour
 
 Tout le reste est **lu dans la table, non vérifié**. Une mesure par ligne est bienvenue (issue GitHub avec le modèle, le type détecté et la valeur lue face à l'écran).
 
+## Ce que le module fait des valeurs (lu dans le code)
+
+Relevé en désassemblant le firmware, sans exécution. À confirmer par mesure.
+
+**Conversions avant envoi au cloud :**
+
+| Clé envoyée | Registre | Conversion |
+|---|---|---|
+| `roomTemp` | `RAM_TAMB` | valeur × 0,5 (°C) |
+| `waterTemp` | `RAM_TH20` | valeur × 0,5 |
+| `pufferSupTemp`, `pufferInfTemp`, `boilerTemp`, `h2oRitTemp` | `RAM_T_PUFFER_SUP`, `_INF`, `RAM_T_BOILER`, `RAM_T_H20_RIT` | valeur × 0,5 |
+| `smokeTemp` | `RAM_T_FUMI` | valeur **+ 30** (°C, entier) |
+| `chambTemp` | `RAM_T_CAMERA` | valeur × 4 |
+| `machineState` | `RAM_STOVE_STATUS` | valeur brute |
+| `power` | `RAM_POT_REALE` | (valeur ÷ 4, partie entière) + 1, seulement quand l'état vaut 4 (marche), sinon 0 |
+| `st7Cause` | `RAM_CAUSA_STATO7` | valeur brute, seulement quand l'état vaut 7, sinon 0 |
+| `modCause` | `RAM_MOD` | valeur brute |
+| `bulbThermostat` | `RAM_BULBO` | 0 si le registre existe et vaut moins que `BULBO_ON_VALUE`, sinon 1 |
+| `workingH1` à `workingH5`, `workingHTot`, `ignitions` | compteurs EEPROM | octet `_MSB` × 256 + octet `_LSB` |
+| `alarmCode` | `RAM_ALLARM` | valeur brute (voir les codes plus bas) |
+
+**Allumer et éteindre.** Le module n'écrit pas dans le registre d'état `0x21`. Il écrit dans `RAM_STATO_GESTITO` (`0xE8`) la valeur rangée sous `RAM_ACCENDI` (`0x55`) pour allumer, ou sous `RAM_SPEGNI` (`0xAA`) pour éteindre : ces deux lignes de la table sont donc des **valeurs de commande**, pas des adresses. Le choix dépend de l'état courant (allumage depuis les états 0 et 6, extinction depuis l'état 9 ; la branche des autres états n'est pas décodée). La méthode de la communauté (écrire 1 ou 6 dans `0x21`) fonctionne sur la Teodora Evo, mais ce n'est pas celle du module officiel.
+
+**Réglages acceptés du cloud**, chacun borné par les minimums et maximums de la table avant écriture en EEPROM :
+
+| Réglage | Registre EEPROM |
+|---|---|
+| `targetPower` | `SET_POWER` |
+| `targetRoomTemp` | `SET_AMB` |
+| `targetWaterTemp` | `SET_TEMP` |
+| `mainFanSpeed`, `mainFanMode` | `SET_TANG_VEL`, `SET_TANG_ENABLE` |
+| `targetCan1Temp`, `targetCan2Temp` | `SET_CAN1_TEMP`, `SET_CAN2_TEMP` |
+| `can1FanMode`, `can2FanMode` | `SET_CAN1_VEL`, `SET_CAN2_VEL` |
+| `workingMode` | `SET_AUTOMATIC_MODE` |
+| `airZoneControl`, `airZoneControlAvail` | `SET_AIR_ZONE_CONTROL`, `_AVAIL` |
+| `machineState` | pas un registre EEPROM : voir « Allumer et éteindre » |
+
 ## Points ouverts
 
-- **`RAM_T_FUMI_ADDR`** vaut `0x02` dans les 12 tables, alors que la mesure sur la Teodora a trouvé la température des fumées affichée en RAM `0x5A`. À trancher.
-- **`RAM_ACCENDI` (`0x55`) et `RAM_SPEGNI` (`0xAA`)** ressemblent à des valeurs de commande plus qu'à des adresses : sur la Teodora, l'allumage passe par `0x21` = 1 et l'extinction par `0x21` = 6.
-- **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). OpenXtraflame écrit `0xAE` sur la Teodora : à vérifier, ou à réserver aux poêles `I_VENT_5`.
+- **Température des fumées.** La table donne `RAM_T_FUMI` en `0x02` pour les 12 types, et le module y ajoute 30 avant de l'envoyer. La mesure sur la Teodora avait trouvé la valeur de l'écran directement en RAM `0x5A`. Les deux peuvent être vrais : à vérifier en lisant `0x02` et en comparant à l'écran moins 30.
 - Les adresses `0xDF`, `0xE0` et `0xE2` que `micronova.h` attribue à la trémie vide, à la cause de la veille et à la modulation pour la famille ventilée sont celles des températures de ballon et de chaudière (`I_CALD`, `I_IDRO`). Pour `I_VENT`, la modulation est en `0xA5`, et la trémie et la cause de la veille n'existent pas.
-- Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types.
-- La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)), et la vue par modèle est dans [POELES.md](POELES.md). La Teodora Evo (article `1275002`) y est de type `I_VENT`, comme le code générique du module (`009278451000`). Pour ce type, l'interrupteur général de programmation (`0xAE`) n'existe pas : l'écriture qu'OpenXtraflame y fait est à retirer ou à conditionner.
+- Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types. La séquence de déblocage d'une alarme (`RAM_SBLOCCO`, `RAM_RESET_UTENTE`) n'est pas décodée.
+- **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). La Teodora Evo (article `1275002`) est de type `I_VENT`, comme le code générique du module (`009278451000`) : l'écriture qu'OpenXtraflame fait en `0xAE` est à retirer ou à conditionner.
+- **Type de remplacement.** Pour le code générique, le type peut être remplacé par un message texte `model:STOVE_TYPE_…`, cherché dans la table des 12 noms de types. Par quel canal ce message arrive n'est pas établi.
+- La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)), et la vue par modèle est dans [POELES.md](POELES.md).
 
 ## Bornes des réglages (EEPROM)
 

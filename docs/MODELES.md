@@ -8,9 +8,9 @@ Tout est lu tel quel dans le firmware. Rien n'est vérifié sur un poêle, sauf 
 
 1. Il lit le code de modèle enregistré dans le module (champ `stove_model`) et le cherche dans la table.
 2. Le type est celui de la ligne trouvée.
-3. Exception : pour le premier code, `009278451000` (l'article `9278451` est le module Black Label lui-même dans le tarif), le module prend à la place un type gardé dans une variable à part, quand elle est renseignée ; sinon c'est `I_VENT`. D'où vient cette variable n'est pas encore établi (probablement d'une identification du poêle, d'après les messages « could not choose stove firmware type »).
+3. Exception : pour le premier code, `009278451000` (l'article `9278451` est le module Black Label lui-même dans le tarif), le type peut être remplacé par celui que nomme un message texte `model:STOVE_TYPE_…` reçu par le module. Sans ce message, c'est `I_VENT`. Par quel canal ce message arrive n'est pas établi.
 
-Le numéro du type est son rang dans cette liste, en partant de 0 : `I_IDRO`, `I_IDRO_2`, `I_VENT`, `I_VENT_2`, `I_VENT_3`, `I_VENT_4`, `I_VENT_5`, `I_CANAL`, `I_CANAL_2`, `I_CANAL_3`, `I_CANAL_4`, `I_CALD`.
+Le numéro du type est son rang dans cette liste, en partant de 0 (ordre de la table des noms `STOVE_TYPE_*` du firmware) : `I_IDRO`, `I_IDRO_2`, `I_VENT`, `I_VENT_2`, `I_VENT_3`, `I_VENT_4`, `I_VENT_5`, `I_CANAL`, `I_CANAL_2`, `I_CANAL_3`, `I_CANAL_4`, `I_CALD`.
 
 ## Répartition
 
@@ -34,6 +34,8 @@ Trois types (`I_VENT_4`, `I_VENT_5` hors un modèle, `I_CALD`) n'ont aucun ou pr
 ## Table
 
 Les noms viennent du tarif export La Nordica-Extraflame 1.2023 (article = chiffres 3 à 9 du code) ; « probable » = déduit de la série de codes, donc à confirmer : cette règle s'est déjà trompée une fois (`1283600`, donné Debby, est un Debby CX d'après le catalogue 2025). Voir POELES.md. Vue par type, avec les registres propres à chacun : [POELES.md](POELES.md).
+
+Un même article peut porter un autre nom selon le pays ou l'année, et une série peut n'être vendue que sur certains marchés : le tarif utilisé ici est le tarif **export**, en anglais.
 
 Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les valeurs 10, 11 et 12 sont recopiées telles quelles, leur sens n'est pas établi.
 
