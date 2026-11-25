@@ -6,21 +6,22 @@ Le firmware Extraflame Black Label v1.8 (=décembre 2022) contient des tables d'
 
 ```c
 typedef enum {
-    STOVE_TYPE_UNDEFINED  = 0,
-    STOVE_TYPE_I_CALD     = 1,   // caldaia (=chaudière biomasse pleine)
-    STOVE_TYPE_I_CANAL    = 2,   // canalizzato (=air canalisé)
-    STOVE_TYPE_I_CANAL_2  = 3,
-    STOVE_TYPE_I_CANAL_3  = 4,
-    STOVE_TYPE_I_CANAL_4  = 5,
-    STOVE_TYPE_I_IDRO     = 6,   // hydro (=échangeur eau intégré)
-    STOVE_TYPE_I_IDRO_2   = 7,
-    STOVE_TYPE_I_VENT     = 8,   // ventilato (=Teodora Evo confirmée)
-    STOVE_TYPE_I_VENT_2   = 9,
-    STOVE_TYPE_I_VENT_3   = 10,
-    STOVE_TYPE_I_VENT_4   = 11,
-    STOVE_TYPE_I_VENT_5   = 12,
+    STOVE_TYPE_I_IDRO     = 0,   // hydro (=échangeur eau intégré)
+    STOVE_TYPE_I_IDRO_2   = 1,
+    STOVE_TYPE_I_VENT     = 2,   // ventilato (=Teodora Evo, code générique)
+    STOVE_TYPE_I_VENT_2   = 3,
+    STOVE_TYPE_I_VENT_3   = 4,
+    STOVE_TYPE_I_VENT_4   = 5,
+    STOVE_TYPE_I_VENT_5   = 6,
+    STOVE_TYPE_I_CANAL    = 7,   // canalizzato (=air canalisé)
+    STOVE_TYPE_I_CANAL_2  = 8,
+    STOVE_TYPE_I_CANAL_3  = 9,
+    STOVE_TYPE_I_CANAL_4  = 10,
+    STOVE_TYPE_I_CALD     = 11,  // caldaia (=chaudière)
 } stove_type_t;
 ```
+
+Numérotation relevée dans le firmware le 2026-11-25 (=index des tables de pointeurs et ordre des noms). Le type d'un poêle vient de son code de modèle : table complète dans [MODELES.md](MODELES.md).
 
 ## Familles
 

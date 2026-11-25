@@ -12,7 +12,7 @@ Ce document ne contient que des faits d'interopérabilité : adresses et noms de
   2. 82 octets : la **valeur minimale** ;
   3. 102 adresses sur 16 bits (`0xFFFF` = ce type n'a pas ce registre, case vide ci-dessous) ;
   4. 37 octets : la valeur de chaque constante pour ce type.
-- L'ordre des 12 blocs suit l'énumération `stove_type_t` du firmware : `I_CALD` (1), `I_CANAL` à `I_CANAL_4` (2 à 5), `I_IDRO` et `I_IDRO_2` (6 et 7), `I_VENT` à `I_VENT_5` (8 à 12).
+- Le bloc d'un type se trouve par **cinq tables de 12 pointeurs** (maximums, minimums, adresses EEPROM, adresses RAM, constantes), indexées par le numéro du type, de 0 à 11 : `I_IDRO`, `I_IDRO_2`, `I_VENT` à `I_VENT_5`, `I_CANAL` à `I_CANAL_4`, `I_CALD`. C'est aussi l'ordre des noms `STOVE_TYPE_*` dans le firmware. Le type d'un poêle vient de son code de modèle : voir [MODELES.md](MODELES.md).
 
 Trois recoupements indépendants confirment le décodage. Sur le bloc ventilé, `0x21` (état), `0x01` (ambiance), `0x7F` (puissance) et `0x7D` (consigne) sont exactement les adresses vérifiées sur la Teodora Evo. La température de l'eau (`RAM_TH20_ADDR`) et ses alarmes n'existent que pour la chaudière et les deux hydros. Et dans les 12 blocs, une borne n'est renseignée que là où une adresse existe : puissance de 1 à 5, programmes horaires de 0 à 144 (dizaines de minutes sur 24 h), jours à 0 ou 1.
 
@@ -36,8 +36,7 @@ Tout le reste est **lu dans la table, non vérifié**. Une mesure par ligne est 
 - **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). OpenXtraflame écrit `0xAE` sur la Teodora : à vérifier, ou à réserver aux poêles `I_VENT_5`.
 - Les adresses `0xDF`, `0xE0` et `0xE2` que `micronova.h` attribue à la trémie vide, à la cause de la veille et à la modulation pour la famille ventilée sont celles des températures de ballon et de chaudière (`I_CALD`, `I_IDRO`). Pour `I_VENT`, la modulation est en `0xA5`, et la trémie et la cause de la veille n'existent pas.
 - Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types.
-- Le firmware contient aussi une **table de 239 codes de modèle** (12 chiffres, du genre `001283000000`) et trois colonnes de petits entiers par modèle. C'est elle qui relie un poêle à son type, mais la règle se trouve dans le code et n'est pas encore décodée.
-- Le type d'un poêle n'est pas encore détecté de façon sûre (voir [STOVE-TYPES.md](STOVE-TYPES.md)) : la Teodora Evo est ventilée, mais sa variante exacte (`I_VENT` ou `I_VENT_5` notamment) reste à confirmer.
+- La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)). Le module de la Teodora Evo mesurée porte le code générique `009278451000`, qui donne `I_VENT` par défaut : pour ce type, l'interrupteur général de programmation (`0xAE`) n'existe pas. Reste à savoir si le module corrige ce type après avoir interrogé le poêle.
 
 ## Bornes des réglages (EEPROM)
 

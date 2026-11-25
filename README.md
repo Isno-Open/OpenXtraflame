@@ -177,6 +177,7 @@ Voir :
 - [docs/PROTOCOLE-MICRONOVA.md](docs/PROTOCOLE-MICRONOVA.md) - bus série + registres
 - [docs/CLOUD_REVERSE_NOTES.md](docs/CLOUD_REVERSE_NOTES.md) - cloud MQTT + REST API
 - [docs/REGISTRES.md](docs/REGISTRES.md) - carte des registres du Black Label : adresses, bornes et codes d'alarme pour les 12 types de poêle
+- [docs/MODELES.md](docs/MODELES.md) - les 239 codes de modèle Extraflame et le type de poêle de chacun
 - [docs/STOVE-TYPES.md](docs/STOVE-TYPES.md) - les 12 types de poêle et leur détection
 - [analysis/firmware-cartography.md](analysis/firmware-cartography.md) - dump analysis
 
