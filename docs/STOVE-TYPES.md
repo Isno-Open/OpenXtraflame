@@ -33,7 +33,7 @@ typedef enum {
 
 ## Adresses EEPROM par famille (extrait du reverse)
 
-Le firmware original stocke 60 `Addrs_dyn` tables (=une par type × plusieurs sous-tables `RAM/EEPROM/chrono/custom`). Toutes extraites du dump à l'offset file `0x646e4`.
+Le firmware original stocke un bloc `Addrs_dyn` par type (=12 blocs : bornes, adresses EEPROM et RAM, codes d'alarme). La carte complète, décodée, est dans [REGISTRES.md](REGISTRES.md).
 
 ### I_VENT (=Teodora Evo, validé 2026-07-08)
 

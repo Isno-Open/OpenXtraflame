@@ -169,14 +169,15 @@ Le firmware original du module Extraflame Black Label a été dumpé et analysé
 
 - Protocole Micronova UART (=1200 baud 8N2, ligne inversée, opcode read/write EEPROM)
 - Format frame `[loc][addr][val][cks]` avec checksum additif
-- 60 tables Addrs_dyn (=une par variant modèle)
+- Table `Addrs_dyn` : 102 registres (=82 EEPROM, 20 RAM) pour chacun des 12 types de poêle, avec les bornes des réglages et les codes d'alarme
 - Format topic MQTT cloud + auth handshake
 - Cert TLS CA Omnyvore
 
 Voir :
 - [docs/PROTOCOLE-MICRONOVA.md](docs/PROTOCOLE-MICRONOVA.md) - bus série + registres
 - [docs/CLOUD_REVERSE_NOTES.md](docs/CLOUD_REVERSE_NOTES.md) - cloud MQTT + REST API
-- [docs/STOVE-TYPES.md](docs/STOVE-TYPES.md) - 60 modèles supportés
+- [docs/REGISTRES.md](docs/REGISTRES.md) - carte des registres du Black Label : adresses, bornes et codes d'alarme pour les 12 types de poêle
+- [docs/STOVE-TYPES.md](docs/STOVE-TYPES.md) - les 12 types de poêle et leur détection
 - [analysis/firmware-cartography.md](analysis/firmware-cartography.md) - dump analysis
 
 ## Build
@@ -227,7 +228,8 @@ OpenXtraflame/
 │   ├── MQTT_PROTOCOL.md         # topics HA local
 │   ├── CLOUD_REVERSE_NOTES.md   # reverse cloud Omnyvore/Extraflame
 │   ├── PROTOCOLE-MICRONOVA.md   # bus série + registres RAM/EEPROM
-│   ├── STOVE-TYPES.md           # 60 modèles supportés Addrs_dyn
+│   ├── REGISTRES.md             # carte des registres : 12 types, adresses, bornes, alarmes
+│   ├── STOVE-TYPES.md           # les 12 types de poêle (Addrs_dyn)
 │   ├── OTA.md                   # procédure mise à jour
 │   ├── RELATED_PROJECTS.md
 │   └── IDEAS.md                 # backlog features
