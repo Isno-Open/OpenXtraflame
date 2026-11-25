@@ -37,7 +37,7 @@ Les noms viennent du tarif export La Nordica-Extraflame 1.2023 (article = chiffr
 
 ## Audit : ces modèles sont-ils tous « Black Label » ?
 
-Oui. L'outil du fabricant connaît 107 des 123 articles de la table, et répond pour **les 107** : module blanc non compatible, module noir compatible, module gris compatible. Les 16 autres articles sont absents de sa base (colonnes « ? »). La table du firmware est donc bien la liste des poêles du module noir.
+Oui. Les outils de compatibilité du groupe (`compatibility.extraflame.it` pour La Nordica-Extraflame, `compatibility.dalzotto.com` pour sa filiale Dal Zotto) connaissent 111 des 123 articles de la table, et répondent pour **les 111** : module blanc non compatible, module noir compatible, module gris compatible. Quatre articles sont des Dal Zotto (Leyla Elite, Inserto 700 Air, Inserto 850 Elite) : le même module noir sert donc les deux marques. Les 12 autres articles sont absents des deux bases (colonnes « ? »). La table du firmware est donc bien la liste des poêles du module noir.
 
 Trois enseignements de plus, tirés d'un sondage de 40 modèles du tarif 2023 absents de la table :
 
@@ -60,8 +60,8 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001283600000` | DEBBY CX | `I_VENT` | 0 | 2 | 0 | oui | oui |
 | `001283601000` | DEBBY CX | `I_VENT` | 0 | 2 | 0 | oui | oui |
 | `001283602000` | DEBBY CX | `I_VENT` | 0 | 2 | 0 | oui | oui |
-| `001283100000` |  | `I_CANAL` | 0 | 2 | 1 | ? | ? |
-| `001283101000` |  | `I_CANAL` | 0 | 2 | 1 | ? | ? |
+| `001283100000` | LEYLA ELITE (Dal Zotto) | `I_CANAL` | 0 | 2 | 1 | oui | oui |
+| `001283101000` | LEYLA ELITE (Dal Zotto) | `I_CANAL` | 0 | 2 | 1 | oui | oui |
 | `001282800000` | TERRY PLUS | `I_CANAL_2` | 0 | 2 | 2 | oui | oui |
 | `001282801000` | TERRY PLUS | `I_CANAL_2` | 0 | 2 | 2 | oui | oui |
 | `001282801001` | TERRY PLUS | `I_CANAL_2` | 0 | 2 | 2 | oui | oui |
@@ -115,10 +115,10 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001282507000` | ANGELA PLUS EVO | `I_CANAL` | 0 | 2 | 1 | oui | oui |
 | `001282508000` | ANGELA PLUS EVO | `I_CANAL` | 0 | 2 | 1 | oui | oui |
 | `001283450000` | COMFORT P70 AIR PLUS | `I_CANAL_4` | 0 | 2 | 11 | oui | oui |
-| `001284400000` |  | `I_VENT_2` | 0 | 2 | 0 | ? | ? |
-| `001284400001` |  | `I_VENT_2` | 0 | 2 | 0 | ? | ? |
-| `001284550000` |  | `I_CANAL_3` | 0 | 2 | 12 | ? | ? |
-| `001284550001` |  | `I_CANAL_3` | 0 | 2 | 12 | ? | ? |
+| `001284400000` | INSERTO 700 AIR (Dal Zotto) | `I_VENT_2` | 0 | 2 | 0 | oui | oui |
+| `001284400001` | INSERTO 700 AIR (Dal Zotto) | `I_VENT_2` | 0 | 2 | 0 | oui | oui |
+| `001284550000` | INSERTO 850 ELITE (Dal Zotto) | `I_CANAL_3` | 0 | 2 | 12 | oui | oui |
+| `001284550001` | INSERTO 850 ELITE (Dal Zotto) | `I_CANAL_3` | 0 | 2 | 12 | oui | oui |
 | `001283300001` | COMFORT P85 | `I_VENT_2` | 0 | 2 | 0 | oui | oui |
 | `001282309000` | MOIRA EVO | `I_VENT` | 0 | 2 | 0 | oui | oui |
 | `001282310000` | MOIRA EVO | `I_VENT` | 0 | 2 | 0 | oui | oui |
