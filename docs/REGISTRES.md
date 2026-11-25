@@ -50,7 +50,18 @@ Relevé en désassemblant le firmware, sans exécution. À confirmer par mesure.
 | `workingH1` à `workingH5`, `workingHTot`, `ignitions` | compteurs EEPROM | octet `_MSB` × 256 + octet `_LSB` |
 | `alarmCode` | `RAM_ALLARM` | valeur brute (voir les codes plus bas) |
 
-**Allumer et éteindre.** Le module n'écrit pas dans le registre d'état `0x21`. Il écrit dans `RAM_STATO_GESTITO` (`0xE8`) la valeur rangée sous `RAM_ACCENDI` (`0x55`) pour allumer, ou sous `RAM_SPEGNI` (`0xAA`) pour éteindre : ces deux lignes de la table sont donc des **valeurs de commande**, pas des adresses. Le choix dépend de l'état courant (allumage depuis les états 0 et 6, extinction depuis l'état 9 ; la branche des autres états n'est pas décodée). La méthode de la communauté (écrire 1 ou 6 dans `0x21`) fonctionne sur la Teodora Evo, mais ce n'est pas celle du module officiel.
+**Allumer et éteindre.** Le module n'écrit pas 1 ou 6 dans le registre d'état `0x21`. La commande `machineState` du cloud agit comme une **bascule**, décidée par l'état courant du poêle, et écrit dans `RAM_STATO_GESTITO` (`0xE8`) la valeur rangée sous `RAM_ACCENDI` (`0x55`) ou sous `RAM_SPEGNI` (`0xAA`) : ces deux lignes de la table sont donc des **valeurs de commande**, pas des adresses.
+
+| État courant | Ce que le module écrit |
+|---|---|
+| 0 (arrêt) ou 6 (nettoyage final) | `0xE8` = `0x55` : allumer |
+| 1 à 5, 7, 8 | `0xE8` = `0xAA` : éteindre |
+| 9 (alarme d'allumage) | `0xE8` = `0xAA`, puis `0x21` = 0 : c'est le seul acquittement d'alarme du module |
+| au-delà de 9 | rien |
+
+La méthode de la communauté (écrire 1 ou 6 dans `0x21`) fonctionne sur la Teodora Evo, mais ce n'est pas celle du module officiel.
+
+**Inventaire des écritures.** Dans tout le code, le module n'écrit en RAM que ces deux registres (`0xE8`, et `0x21` remis à 0 depuis l'état 9), et saute l'écriture si la valeur lue est déjà la bonne. Il n'écrit jamais `RAM_SBLOCCO` ni `RAM_RESET_UTENTE`. En EEPROM, il écrit les réglages du tableau ci-dessous, les programmes horaires (heures, consigne, puissance, et un octet 0 ou 1 par jour tiré d'un masque de 7 bits), et l'interrupteur général de programmation quand il existe pour le type.
 
 **Réglages acceptés du cloud**, chacun borné par les minimums et maximums de la table avant écriture en EEPROM :
 
@@ -70,9 +81,9 @@ Relevé en désassemblant le firmware, sans exécution. À confirmer par mesure.
 
 - **Température des fumées.** La table donne `RAM_T_FUMI` en `0x02` pour les 12 types, et le module y ajoute 30 avant de l'envoyer. La mesure sur la Teodora avait trouvé la valeur de l'écran directement en RAM `0x5A`. Les deux peuvent être vrais : à vérifier en lisant `0x02` et en comparant à l'écran moins 30.
 - Les adresses `0xDF`, `0xE0` et `0xE2` que `micronova.h` attribue à la trémie vide, à la cause de la veille et à la modulation pour la famille ventilée sont celles des températures de ballon et de chaudière (`I_CALD`, `I_IDRO`). Pour `I_VENT`, la modulation est en `0xA5`, et la trémie et la cause de la veille n'existent pas.
-- Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types. La séquence de déblocage d'une alarme (`RAM_SBLOCCO`, `RAM_RESET_UTENTE`) n'est pas décodée.
+- Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types. Le module n'écrit jamais `RAM_SBLOCCO` ni `RAM_RESET_UTENTE` : son seul acquittement est celui de l'état 9, décrit plus haut.
 - **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). La Teodora Evo (article `1275002`) est de type `I_VENT`, comme le code générique du module (`009278451000`) : l'écriture qu'OpenXtraflame fait en `0xAE` est à retirer ou à conditionner.
-- **Type de remplacement.** Pour le code générique, le type peut être remplacé par un message texte `model:STOVE_TYPE_…`, cherché dans la table des 12 noms de types. Par quel canal ce message arrive n'est pas établi.
+- **Tables dynamiques.** Le nom `Addrs_dyn` veut dire « adresses dynamiques » : les 12 blocs du firmware sont des valeurs par défaut. Le module sait recevoir un texte, en plusieurs morceaux qu'il garde en mémoire, qui redéfinit une adresse (`EEPROM_SET_POWER_ADDR` suivi d'une valeur, en hexadécimal ou en décimal), une borne (préfixes `MAX_` et `MIN_`) ou le type (`model:STOVE_TYPE_…`). C'est à ça que servent les tables de noms. Ce texte arrive très probablement par le cloud (la fonction `addrsDyn_setPars` est appelée depuis le code MQTT), ce qui permet au fabricant de corriger les adresses d'un poêle sans changer le firmware. Conséquence : pour un poêle donné, les adresses réellement utilisées par un module officiel peuvent différer de celles de ce document. Le format exact du texte n'est pas décodé.
 - La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)), et la vue par modèle est dans [POELES.md](POELES.md).
 
 ## Bornes des réglages (EEPROM)

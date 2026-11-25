@@ -8,7 +8,7 @@ Tout est lu tel quel dans le firmware. Rien n'est vérifié sur un poêle, sauf 
 
 1. Il lit le code de modèle enregistré dans le module (champ `stove_model`) et le cherche dans la table.
 2. Le type est celui de la ligne trouvée.
-3. Exception : pour le premier code, `009278451000` (l'article `9278451` est le module Black Label lui-même dans le tarif), le type peut être remplacé par celui que nomme un message texte `model:STOVE_TYPE_…` reçu par le module. Sans ce message, c'est `I_VENT`. Par quel canal ce message arrive n'est pas établi.
+3. Exception : pour le premier code, `009278451000` (l'article `9278451` est le module Black Label lui-même dans le tarif), le type peut être remplacé par une ligne `model:STOVE_TYPE_…` de la table dynamique que le module reçoit (voir « Tables dynamiques » dans [REGISTRES.md](REGISTRES.md)). Sans elle, c'est `I_VENT`.
 
 Le numéro du type est son rang dans cette liste, en partant de 0 (ordre de la table des noms `STOVE_TYPE_*` du firmware) : `I_IDRO`, `I_IDRO_2`, `I_VENT`, `I_VENT_2`, `I_VENT_3`, `I_VENT_4`, `I_VENT_5`, `I_CANAL`, `I_CANAL_2`, `I_CANAL_3`, `I_CANAL_4`, `I_CALD`.
 
