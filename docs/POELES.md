@@ -5,7 +5,7 @@ Pour chaque type de poêle : les modèles qui en relèvent, puis seulement les r
 Sources, toutes lues telles quelles :
 - les adresses, les bornes et les codes d'alarme viennent du firmware du module Wi-Fi Black Label v1.8 (voir [REGISTRES.md](REGISTRES.md) pour la carte brute des 12 types) ;
 - le type de chaque code de modèle vient de la table du même firmware ([MODELES.md](MODELES.md)) ;
-- les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023, dont les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres (`0012750020xx` = article `1275002`, Teodora Evo). Ce tarif nomme 81 des 124 articles. Six autres (Dahiana, Dahiana Plus) viennent de la liste « valable aussi pour » de leur notice. Vingt-huit sont **probables** : leur code est dans la même série qu'un modèle nommé, d'une autre couleur ou d'une autre version, et leur type concorde. Neuf restent sans nom.
+- les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023, dont les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres (`0012750020xx` = article `1275002`, Teodora Evo). Ce tarif nomme 81 des 124 articles. Six autres (Dahiana, Dahiana Plus) viennent de la liste « valable aussi pour » de leur notice, et un (Debby CX) du catalogue 2025. Vingt-sept sont **probables** : leur code est dans la même série qu'un modèle nommé, d'une autre couleur ou d'une autre version, et leur type concorde. Cette déduction est à confirmer, elle s'est déjà trompée une fois. Neuf restent sans nom : ils ne sont ni dans le tarif 2023 ni dans le catalogue 2025, ce sont donc sans doute des modèles sortis du catalogue avant 2023.
 
 Seules les lignes de la Teodora Evo (type `I_VENT`) marquées dans REGISTRES.md ont été vérifiées sur un poêle. Tout le reste est relevé, non vérifié.
 
@@ -166,9 +166,9 @@ Alarmes propres : `81` SONDA_H20_BIT, `C9` ALLARME_COMANDO_COCLEA_BIT, `88` ALLA
 
 ## `I_VENT` : ventilé
 
-**Modèles** : AMIKA, ANGELA EVO, ANNABELLA AD EVO, DAHIANA, DEBBY, GIUSY EVO 2.0, KETTY EVO 2.0, KLAUDIA, MOIRA EVO, PAMELA STEEL, SABRY, SERAFINA LUX EVO, SERAFINA PETRA EVO, SOUVENIR LUX EVO, SOUVENIR PETRA EVO, SOUVENIR STEEL EVO, TEODORA EVO, TEOREMA.
+**Modèles** : AMIKA, ANGELA EVO, ANNABELLA AD EVO, DAHIANA, DEBBY, DEBBY CX, GIUSY EVO 2.0, KETTY EVO 2.0, KLAUDIA, MOIRA EVO, PAMELA STEEL, SABRY, SERAFINA LUX EVO, SERAFINA PETRA EVO, SOUVENIR LUX EVO, SOUVENIR PETRA EVO, SOUVENIR STEEL EVO, TEODORA EVO, TEOREMA.
 
-Probables, par leur série de codes : PAMELA STEEL ou PAMELA CRYSTAL.
+Probables, par leur série de codes : DEBBY ou DEBBY CX (articles `1283601`, `1283602`, `1283606` à `1283608`), PAMELA STEEL ou PAMELA CRYSTAL.
 
 Articles sans nom trouvé : `1284700`, `1284701`.
 

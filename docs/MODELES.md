@@ -33,7 +33,7 @@ Trois types (`I_VENT_4`, `I_VENT_5` hors un modèle, `I_CALD`) n'ont aucun ou pr
 
 ## Table
 
-Les noms viennent du tarif export La Nordica-Extraflame 1.2023 (article = chiffres 3 à 9 du code) ; « probable » = déduit de la série de codes, voir POELES.md. Vue par type, avec les registres propres à chacun : [POELES.md](POELES.md).
+Les noms viennent du tarif export La Nordica-Extraflame 1.2023 (article = chiffres 3 à 9 du code) ; « probable » = déduit de la série de codes, donc à confirmer : cette règle s'est déjà trompée une fois (`1283600`, donné Debby, est un Debby CX d'après le catalogue 2025). Voir POELES.md. Vue par type, avec les registres propres à chacun : [POELES.md](POELES.md).
 
 Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les valeurs 10, 11 et 12 sont recopiées telles quelles, leur sens n'est pas établi.
 
@@ -47,9 +47,9 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001283501000` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502000` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503000` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283600000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283601000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283602000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283600000` | DEBBY CX | `I_VENT` | 0 | 2 | 0 |
+| `001283601000` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283602000` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283100000` |  | `I_CANAL` | 0 | 2 | 1 |
 | `001283101000` |  | `I_CANAL` | 0 | 2 | 1 |
 | `001282800000` | TERRY PLUS | `I_CANAL_2` | 0 | 2 | 2 |
@@ -117,9 +117,9 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001283501001` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502001` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503001` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283600001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283601001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283602001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283600001` | DEBBY CX | `I_VENT` | 0 | 2 | 0 |
+| `001283601001` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283602001` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283603001` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283604001` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283605001` | DEBBY | `I_VENT` | 0 | 2 | 0 |
@@ -183,21 +183,21 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001283501003` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502003` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503003` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283600002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283601002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283602002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283600002` | DEBBY CX | `I_VENT` | 0 | 2 | 0 |
+| `001283601002` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283602002` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283603002` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283604002` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283605002` | DEBBY | `I_VENT` | 0 | 2 | 0 |
-| `001283606000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283606001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283606002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283607000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283607001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283607002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283608000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283608001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
-| `001283608002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283606000` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283606001` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283606002` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283607000` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283607001` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283607002` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283608000` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283608001` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283608002` | DEBBY ou DEBBY CX (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001282103000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 11 | 1 | 0 |
 | `001282104000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 11 | 1 | 0 |
 | `001281703000` | MIETTA EVO (probable) | `I_VENT_5` | 10 | 1 | 0 |
