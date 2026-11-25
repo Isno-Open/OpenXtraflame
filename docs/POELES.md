@@ -5,9 +5,9 @@ Pour chaque type de poêle : les modèles qui en relèvent, puis seulement les r
 Sources, toutes lues telles quelles :
 - les adresses, les bornes et les codes d'alarme viennent du firmware du module Wi-Fi Black Label v1.8 (voir [REGISTRES.md](REGISTRES.md) pour la carte brute des 12 types) ;
 - le type de chaque code de modèle vient de la table du même firmware ([MODELES.md](MODELES.md)) ;
-- les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023, dont les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres (`0012750020xx` = article `1275002`, Teodora Evo). Ce tarif nomme 81 des 124 articles. Six autres (Dahiana, Dahiana Plus) viennent de la liste « valable aussi pour » de leur notice, et un (Debby CX) du catalogue 2025. Vingt-sept sont **probables** : leur code est dans la même série qu'un modèle nommé, d'une autre couleur ou d'une autre version, et leur type concorde. Cette déduction est à confirmer, elle s'est déjà trompée une fois. Neuf restent sans nom : ils ne sont ni dans le tarif 2023 ni dans le catalogue 2025, ce sont donc sans doute des modèles sortis du catalogue avant 2023.
+- les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023 (les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres : `0012750020xx` = article `1275002`, Teodora Evo) et de l'outil de compatibilité du fabricant, qui nomme 107 des 123 articles. Seize articles restent sans nom, absents de sa base. Tous les modèles nommés sont donnés compatibles avec le module noir (audit dans [MODELES.md](MODELES.md)).
 
-Les noms sont ceux du tarif export : un même article peut s'appeler autrement selon le pays ou l'année, et certaines séries ne sont vendues que sur certains marchés.
+Un même article peut s'appeler autrement selon le pays ou l'année, et certaines séries ne sont vendues que sur certains marchés.
 
 Seules les lignes de la Teodora Evo (type `I_VENT`) marquées dans REGISTRES.md ont été vérifiées sur un poêle. Tout le reste est relevé, non vérifié.
 
@@ -125,6 +125,8 @@ Alarmes propres : `81` SONDA_H20_BIT, `C9` ALLARME_COMANDO_COCLEA_BIT, `88` ALLA
 
 **Modèles** : FIANDRA IDRO EVO, GUENDA IDRO.
 
+Articles absents de la base du fabricant, sans nom : `1282103`, `1282104`, `1282107`, `1282108`, `1282109`.
+
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
 | EEPROM | `0x45` | `SET_POWER` | 1 à 5 |
@@ -168,11 +170,9 @@ Alarmes propres : `81` SONDA_H20_BIT, `C9` ALLARME_COMANDO_COCLEA_BIT, `88` ALLA
 
 ## `I_VENT` : ventilé
 
-**Modèles** : AMIKA, ANGELA EVO, ANNABELLA AD EVO, DAHIANA, DEBBY, DEBBY CX, GIUSY EVO 2.0, KETTY EVO 2.0, KLAUDIA, MOIRA EVO, PAMELA STEEL, SABRY, SERAFINA LUX EVO, SERAFINA PETRA EVO, SOUVENIR LUX EVO, SOUVENIR PETRA EVO, SOUVENIR STEEL EVO, TEODORA EVO, TEOREMA.
+**Modèles** : AMIKA, ANGELA EVO, ANNABELLA AD EVO, DAHIANA, DEBBY, DEBBY CX, GIUSY EVO 2.0, KETTY EVO 2.0, KLAUDIA, LUCE, MOIRA EVO, PAMELA CRYSTAL, PAMELA STEEL, SABRY, SERAFINA LUX EVO, SERAFINA PETRA EVO, SOUVENIR LUX EVO, SOUVENIR PETRA EVO, SOUVENIR STEEL EVO, TEODORA EVO, TEOREMA.
 
-Probables, par leur série de codes : DEBBY ou DEBBY CX (articles `1283601`, `1283602`, `1283606` à `1283608`), PAMELA STEEL ou PAMELA CRYSTAL.
-
-Articles sans nom trouvé : `1284700`, `1284701`.
+Articles absents de la base du fabricant, sans nom : `1283606`, `1283607`, `1283608`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -212,7 +212,7 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT, `81` BLOCCO_COCLEA_BIT.
 
 **Modèles** : COMFORT P70 AIR, COMFORT P85.
 
-Articles sans nom trouvé : `1284400`.
+Articles absents de la base du fabricant, sans nom : `1284400`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -254,6 +254,8 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT.
 ## `I_VENT_3` : ventilé, variante 3
 
 **Modèles** : MIETTA EVO, SINFONY.
+
+Articles absents de la base du fabricant, sans nom : `1281706`, `1281707`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -334,7 +336,9 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT, `81` BLOCCO_COCLEA_BIT.
 
 ## `I_VENT_5` : ventilé, variante 5
 
-Probables, par leur série de codes : MIETTA EVO.
+**Modèles** : aucun modèle nommé.
+
+Articles absents de la base du fabricant, sans nom : `1281703`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -369,9 +373,11 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT, `84` GUASTO_BOTOLA_BIT, `88` 
 
 ## `I_CANAL` : canalisé, une canalisation
 
-**Modèles** : ANGELA PLUS EVO, DAHIANA PLUS, GABRIELLA PLUS, GIUSY PLUS EVO 2.0, KLAUDIA PLUS, MARILENA PLUS AD.
+**Modèles** : ANGELA PLUS EVO, DAHIANA PLUS, GABRIELLA PLUS, GIUSY PLUS EVO 2.0, KLAUDIA PLUS, MARILENA PLUS, MARILENA PLUS AD.
 
-Articles sans nom trouvé : `1283100`, `1283101`, `1284200`, `4273107`, `4273108`, `4273111`.
+Codes de pièces détachées présents dans la table : pièce « corps » Gabriella Plus Pt, pièce « corps » Marilena Plus AD Cry, pièce « corps » Marilena Plus AD Pt.
+
+Articles absents de la base du fabricant, sans nom : `1283100`, `1283101`, `1284200`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -454,7 +460,7 @@ Alarmes propres : `C0` ALLARME_COMANDO_COCLEA_BIT, `84` GUASTO_BOTOLA_BIT, `A0` 
 
 **Modèles** : COMFORT P85 PLUS, TEOREMA PLUS.
 
-Articles sans nom trouvé : `1284550`.
+Articles absents de la base du fabricant, sans nom : `1284550`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
