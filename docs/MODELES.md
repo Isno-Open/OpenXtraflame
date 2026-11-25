@@ -6,7 +6,7 @@ Tout est lu tel quel dans le firmware. Rien n'est vérifié sur un poêle, sauf 
 
 ## Comment le module choisit le type
 
-1. Il lit le code de modèle enregistré dans le module (champ `stove_model`) et le cherche dans la table.
+1. Il lit le code de modèle enregistré dans le module (champ `stove_model`) et le cherche dans la table. Si ce champ est vide ou inconnu, c'est le premier code de la table, le code générique, qui est pris.
 2. Le type est celui de la ligne trouvée.
 3. Exception : pour le premier code, `009278451000` (l'article `9278451` est le module Black Label lui-même dans le tarif), le type peut être remplacé par une ligne `model:STOVE_TYPE_…` de la table dynamique que le module reçoit (voir « Tables dynamiques » dans [REGISTRES.md](REGISTRES.md)). Sans elle, c'est `I_VENT`.
 

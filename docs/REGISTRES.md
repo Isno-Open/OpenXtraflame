@@ -83,7 +83,19 @@ La méthode de la communauté (écrire 1 ou 6 dans `0x21`) fonctionne sur la Teo
 - Les adresses `0xDF`, `0xE0` et `0xE2` que `micronova.h` attribue à la trémie vide, à la cause de la veille et à la modulation pour la famille ventilée sont celles des températures de ballon et de chaudière (`I_CALD`, `I_IDRO`). Pour `I_VENT`, la modulation est en `0xA5`, et la trémie et la cause de la veille n'existent pas.
 - Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types. Le module n'écrit jamais `RAM_SBLOCCO` ni `RAM_RESET_UTENTE` : son seul acquittement est celui de l'état 9, décrit plus haut.
 - **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). La Teodora Evo (article `1275002`) est de type `I_VENT`, comme le code générique du module (`009278451000`) : l'écriture qu'OpenXtraflame fait en `0xAE` est à retirer ou à conditionner.
-- **Tables dynamiques.** Le nom `Addrs_dyn` veut dire « adresses dynamiques » : les 12 blocs du firmware sont des valeurs par défaut. Le module sait recevoir un texte, en plusieurs morceaux qu'il garde en mémoire, qui redéfinit une adresse (`EEPROM_SET_POWER_ADDR` suivi d'une valeur, en hexadécimal ou en décimal), une borne (préfixes `MAX_` et `MIN_`) ou le type (`model:STOVE_TYPE_…`). C'est à ça que servent les tables de noms. Ce texte arrive très probablement par le cloud (la fonction `addrsDyn_setPars` est appelée depuis le code MQTT), ce qui permet au fabricant de corriger les adresses d'un poêle sans changer le firmware. Conséquence : pour un poêle donné, les adresses réellement utilisées par un module officiel peuvent différer de celles de ce document. Le format exact du texte n'est pas décodé.
+- **Tables dynamiques.** Le nom `Addrs_dyn` veut dire « adresses dynamiques » : les 12 blocs du firmware sont des valeurs par défaut, que le module peut corriger en mémoire. Il sait recevoir un texte, en plusieurs morceaux qu'il enregistre et recharge au démarrage, fait d'éléments séparés par des virgules. Chaque élément désigne une case par une lettre et un rang, ou par son nom complet, puis donne sa nouvelle valeur (hexadécimale ou décimale) :
+
+  | Lettre | Ce qui est modifié, pour le type courant |
+  |---|---|
+  | `E` | l'adresse d'un registre EEPROM |
+  | `R` | l'adresse d'un registre RAM |
+  | `B` | la valeur d'une constante (code d'alarme, état) |
+  | `N`, `X` | la borne minimale, maximale d'un réglage (ou les préfixes `MIN_`, `MAX_` devant le nom) |
+  | `I`, `T`, `C` | produit à eau, nombre de tangentiels, nombre de canalisations du modèle |
+
+  Une ligne `model:STOVE_TYPE_…` fixe le type. Ce texte arrive très probablement par le cloud (la fonction `addrsDyn_setPars` est appelée depuis le code MQTT), ce qui permet au fabricant de corriger les adresses d'un poêle sans changer le firmware. Conséquence : sur un module officiel qui a reçu une telle correction, les adresses utilisées peuvent différer de celles de ce document.
+
+  Sur le module de la Teodora Evo dont vient ce firmware, la mémoire non volatile ne contient **aucune** correction enregistrée, et son code de modèle est vide : il travaillait donc avec le bloc `I_VENT` par défaut, tel que publié ici.
 - La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)), et la vue par modèle est dans [POELES.md](POELES.md).
 
 ## Bornes des réglages (EEPROM)
