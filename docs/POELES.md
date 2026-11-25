@@ -5,7 +5,7 @@ Pour chaque type de poêle : les modèles qui en relèvent, puis seulement les r
 Sources, toutes lues telles quelles :
 - les adresses, les bornes et les codes d'alarme viennent du firmware du module Wi-Fi Black Label v1.8 (voir [REGISTRES.md](REGISTRES.md) pour la carte brute des 12 types) ;
 - le type de chaque code de modèle vient de la table du même firmware ([MODELES.md](MODELES.md)) ;
-- les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023, dont les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres (`0012750020xx` = article `1275002`, Teodora Evo). Ce tarif nomme 81 des 124 articles de la table ; les autres, plus anciens ou absents de ce tarif, sont listés par code.
+- les **noms commerciaux** viennent du tarif export La Nordica-Extraflame 1.2023, dont les codes d'article à 7 chiffres sont le milieu des codes de modèle à 12 chiffres (`0012750020xx` = article `1275002`, Teodora Evo). Ce tarif nomme 81 des 124 articles. Six autres (Dahiana, Dahiana Plus) viennent de la liste « valable aussi pour » de leur notice. Vingt-huit sont **probables** : leur code est dans la même série qu'un modèle nommé, d'une autre couleur ou d'une autre version, et leur type concorde. Neuf restent sans nom.
 
 Seules les lignes de la Teodora Evo (type `I_VENT`) marquées dans REGISTRES.md ont été vérifiées sur un poêle. Tout le reste est relevé, non vérifié.
 
@@ -75,7 +75,7 @@ Codes d'alarme communs (registre `RAM_ALLARM`) : `01` SONDA_FUMI_BIT, `02` HOT_F
 
 ## `I_IDRO` : hydro (poêle à eau)
 
-**Modèles** (tarif 2023) : RAFFAELLA IDRO H15, RAFFAELLA IDRO H18, ROSANNA IDRO.
+**Modèles** : RAFFAELLA IDRO H15, RAFFAELLA IDRO H18, ROSANNA IDRO.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -121,9 +121,7 @@ Alarmes propres : `81` SONDA_H20_BIT, `C9` ALLARME_COMANDO_COCLEA_BIT, `88` ALLA
 
 ## `I_IDRO_2` : hydro, variante 2
 
-**Modèles** (tarif 2023) : FIANDRA IDRO EVO, GUENDA IDRO.
-
-Articles sans nom dans ce tarif : `1282103`, `1282104`, `1282105`, `1282107`, `1282108`, `1282109`.
+**Modèles** : FIANDRA IDRO EVO, GUENDA IDRO.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -168,9 +166,11 @@ Alarmes propres : `81` SONDA_H20_BIT, `C9` ALLARME_COMANDO_COCLEA_BIT, `88` ALLA
 
 ## `I_VENT` : ventilé
 
-**Modèles** (tarif 2023) : AMIKA, ANGELA EVO, ANNABELLA AD EVO, DEBBY, GIUSY EVO 2.0, KETTY EVO 2.0, KLAUDIA, MOIRA EVO, PAMELA STEEL, SABRY, SERAFINA LUX EVO, SERAFINA PETRA EVO, SOUVENIR LUX EVO, SOUVENIR PETRA EVO, SOUVENIR STEEL EVO, TEODORA EVO, TEOREMA.
+**Modèles** : AMIKA, ANGELA EVO, ANNABELLA AD EVO, DAHIANA, DEBBY, GIUSY EVO 2.0, KETTY EVO 2.0, KLAUDIA, MOIRA EVO, PAMELA STEEL, SABRY, SERAFINA LUX EVO, SERAFINA PETRA EVO, SOUVENIR LUX EVO, SOUVENIR PETRA EVO, SOUVENIR STEEL EVO, TEODORA EVO, TEOREMA.
 
-Articles sans nom dans ce tarif : `1280103`, `1282309`, `1282406`, `1283500`, `1283600`, `1283601`, `1283602`, `1283606`, `1283607`, `1283608`, `1284000`, `1284001`, `1284002`, `1284003`, `1284700`, `1284701`, `1285402`.
+Probables, par leur série de codes : PAMELA STEEL ou PAMELA CRYSTAL.
+
+Articles sans nom trouvé : `1284700`, `1284701`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -208,9 +208,9 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT, `81` BLOCCO_COCLEA_BIT.
 
 ## `I_VENT_2` : ventilé, variante 2
 
-**Modèles** (tarif 2023) : COMFORT P70 AIR, COMFORT P85.
+**Modèles** : COMFORT P70 AIR, COMFORT P85.
 
-Articles sans nom dans ce tarif : `1284400`.
+Articles sans nom trouvé : `1284400`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -251,9 +251,7 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT.
 
 ## `I_VENT_3` : ventilé, variante 3
 
-**Modèles** (tarif 2023) : MIETTA EVO, SINFONY.
-
-Articles sans nom dans ce tarif : `1281706`, `1281707`.
+**Modèles** : MIETTA EVO, SINFONY.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -294,7 +292,7 @@ Alarmes propres : `C0` ALLARME_COMANDO_COCLEA_BIT, `84` GUASTO_BOTOLA_BIT, `A0` 
 
 ## `I_VENT_4` : ventilé, variante 4
 
-**Modèles** : aucun modèle nommé dans le tarif 2023.
+**Modèles** : aucun modèle nommé.
 
 Aucun code de modèle de la table ne donne ce type.
 
@@ -334,9 +332,7 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT, `81` BLOCCO_COCLEA_BIT.
 
 ## `I_VENT_5` : ventilé, variante 5
 
-**Modèles** : aucun modèle nommé dans le tarif 2023.
-
-Articles sans nom dans ce tarif : `1281703`.
+Probables, par leur série de codes : MIETTA EVO.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -371,9 +367,9 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT, `84` GUASTO_BOTOLA_BIT, `88` 
 
 ## `I_CANAL` : canalisé, une canalisation
 
-**Modèles** (tarif 2023) : ANGELA PLUS EVO, GABRIELLA PLUS, GIUSY PLUS EVO 2.0, KLAUDIA PLUS, MARILENA PLUS AD.
+**Modèles** : ANGELA PLUS EVO, DAHIANA PLUS, GABRIELLA PLUS, GIUSY PLUS EVO 2.0, KLAUDIA PLUS, MARILENA PLUS AD.
 
-Articles sans nom dans ce tarif : `1282506`, `1283000`, `1283001`, `1283002`, `1283003`, `1283100`, `1283101`, `1284050`, `1284051`, `1284052`, `1284053`, `1284200`, `4273107`, `4273108`, `4273111`.
+Articles sans nom trouvé : `1283100`, `1283101`, `1284200`, `4273107`, `4273108`, `4273111`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -413,7 +409,7 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT.
 
 ## `I_CANAL_2` : canalisé, variante 2
 
-**Modèles** (tarif 2023) : TERRY PLUS.
+**Modèles** : TERRY PLUS.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -454,9 +450,9 @@ Alarmes propres : `C0` ALLARME_COMANDO_COCLEA_BIT, `84` GUASTO_BOTOLA_BIT, `A0` 
 
 ## `I_CANAL_3` : canalisé, variante 3
 
-**Modèles** (tarif 2023) : COMFORT P85 PLUS, TEOREMA PLUS.
+**Modèles** : COMFORT P85 PLUS, TEOREMA PLUS.
 
-Articles sans nom dans ce tarif : `1284550`.
+Articles sans nom trouvé : `1284550`.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -501,7 +497,7 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT.
 
 ## `I_CANAL_4` : canalisé, variante 4
 
-**Modèles** (tarif 2023) : COMFORT P70 AIR PLUS.
+**Modèles** : COMFORT P70 AIR PLUS.
 
 | Banque | Adresse | Nom Extraflame | Bornes |
 |---|---|---|---|
@@ -544,7 +540,7 @@ Alarmes propres : `82` ALLARME_COMANDO_COCLEA_BIT.
 
 ## `I_CALD` : chaudière
 
-**Modèles** : aucun modèle nommé dans le tarif 2023.
+**Modèles** : aucun modèle nommé.
 
 Aucun code de modèle de la table ne donne ce type.
 

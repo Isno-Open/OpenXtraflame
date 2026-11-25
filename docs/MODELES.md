@@ -33,23 +33,23 @@ Trois types (`I_VENT_4`, `I_VENT_5` hors un modèle, `I_CALD`) n'ont aucun ou pr
 
 ## Table
 
-Les noms viennent du tarif export La Nordica-Extraflame 1.2023 (article = chiffres 3 à 9 du code). Vue par type, avec les registres propres à chacun : [POELES.md](POELES.md).
+Les noms viennent du tarif export La Nordica-Extraflame 1.2023 (article = chiffres 3 à 9 du code) ; « probable » = déduit de la série de codes, voir POELES.md. Vue par type, avec les registres propres à chacun : [POELES.md](POELES.md).
 
 Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les valeurs 10, 11 et 12 sont recopiées telles quelles, leur sens n'est pas établi.
 
-| Code de modèle | Modèle (tarif 2023) | Type | Eau | Tangentiels | Canalisations |
+| Code de modèle | Modèle | Type | Eau | Tangentiels | Canalisations |
 |---|---|---|---|---|---|
 | `009278451000` | module Wi-Fi Black Label (code générique) | `I_VENT` | 0 |  | 0 |
-| `001283000000` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001283001000` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001283002000` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001283500000` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283000000` | MARILENA PLUS AD (probable) | `I_CANAL` | 0 | 2 | 1 |
+| `001283001000` | MARILENA PLUS AD (probable) | `I_CANAL` | 0 | 2 | 1 |
+| `001283002000` | MARILENA PLUS AD (probable) | `I_CANAL` | 0 | 2 | 1 |
+| `001283500000` | AMIKA (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283501000` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502000` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503000` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283600000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283601000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283602000` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283600000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283601000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283602000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283100000` |  | `I_CANAL` | 0 | 2 | 1 |
 | `001283101000` |  | `I_CANAL` | 0 | 2 | 1 |
 | `001282800000` | TERRY PLUS | `I_CANAL_2` | 0 | 2 | 2 |
@@ -69,19 +69,19 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001283603000` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283604000` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283605000` | DEBBY | `I_VENT` | 0 | 2 | 0 |
-| `001283003000` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001283003000` | MARILENA PLUS AD (probable) | `I_CANAL` | 0 | 2 | 1 |
 | `001283004000` | MARILENA PLUS AD | `I_CANAL` | 0 | 2 | 1 |
 | `001283005000` | MARILENA PLUS AD | `I_CANAL` | 0 | 2 | 1 |
-| `001283003001` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001283003001` | MARILENA PLUS AD (probable) | `I_CANAL` | 0 | 2 | 1 |
 | `001283004001` | MARILENA PLUS AD | `I_CANAL` | 0 | 2 | 1 |
 | `001283005001` | MARILENA PLUS AD | `I_CANAL` | 0 | 2 | 1 |
 | `001284200000` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284000000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284001000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284002000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284050000` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284051000` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284052000` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001284000000` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284001000` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284002000` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284050000` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284051000` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284052000` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
 | `001284100000` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284101000` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284102000` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
@@ -98,10 +98,10 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `004273108000` |  | `I_CANAL` | 0 | 2 | 1 |
 | `004273107001` |  | `I_CANAL` | 0 | 2 | 1 |
 | `004273108001` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001282406000` |  | `I_VENT` | 0 | 2 | 0 |
+| `001282406000` | ANGELA EVO (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001282407000` | ANGELA EVO | `I_VENT` | 0 | 2 | 0 |
 | `001282408000` | ANGELA EVO | `I_VENT` | 0 | 2 | 0 |
-| `001282506000` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001282506000` | ANGELA PLUS EVO (probable) | `I_CANAL` | 0 | 2 | 1 |
 | `001282507000` | ANGELA PLUS EVO | `I_CANAL` | 0 | 2 | 1 |
 | `001282508000` | ANGELA PLUS EVO | `I_CANAL` | 0 | 2 | 1 |
 | `001283450000` | COMFORT P70 AIR PLUS | `I_CANAL_4` | 0 | 2 | 11 |
@@ -110,58 +110,58 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001284550000` |  | `I_CANAL_3` | 0 | 2 | 12 |
 | `001284550001` |  | `I_CANAL_3` | 0 | 2 | 12 |
 | `001283300001` | COMFORT P85 | `I_VENT_2` | 0 | 2 | 0 |
-| `001282309000` |  | `I_VENT` | 0 | 2 | 0 |
+| `001282309000` | MOIRA EVO (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001282310000` | MOIRA EVO | `I_VENT` | 0 | 2 | 0 |
 | `001282311000` | MOIRA EVO | `I_VENT` | 0 | 2 | 0 |
-| `001283500001` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283500001` | AMIKA (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283501001` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502001` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503001` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283600001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283601001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283602001` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283600001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283601001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283602001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283603001` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283604001` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283605001` | DEBBY | `I_VENT` | 0 | 2 | 0 |
-| `001284000001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284001001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284002001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284050001` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284051001` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284052001` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001284000001` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284001001` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284002001` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284050001` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284051001` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284052001` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
 | `001284100001` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284101001` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284102001` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
-| `001284000002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284001002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284002002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284050002` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284051002` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284052002` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001284000002` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284001002` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284002002` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284050002` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284051002` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284052002` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
 | `001284100002` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284101002` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284102002` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
-| `001284003002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284053002` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284000003` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284001003` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284002003` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284050003` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284051003` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001284052003` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001284003002` | DAHIANA (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001284053002` | DAHIANA PLUS (probable) | `I_CANAL` | 0 | 2 | 1 |
+| `001284000003` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284001003` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284002003` | DAHIANA | `I_VENT` | 0 | 2 | 0 |
+| `001284050003` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284051003` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
+| `001284052003` | DAHIANA PLUS | `I_CANAL` | 0 | 2 | 1 |
 | `001284100003` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284101003` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
 | `001284102003` | TEOREMA | `I_VENT` | 0 | 2 | 0 |
-| `001284003003` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284053003` |  | `I_CANAL` | 0 | 2 | 1 |
-| `001282406001` |  | `I_VENT` | 0 | 2 | 0 |
+| `001284003003` | DAHIANA (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001284053003` | DAHIANA PLUS (probable) | `I_CANAL` | 0 | 2 | 1 |
+| `001282406001` | ANGELA EVO (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001282407001` | ANGELA EVO | `I_VENT` | 0 | 2 | 0 |
 | `001282408001` | ANGELA EVO | `I_VENT` | 0 | 2 | 0 |
-| `001282506001` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001282506001` | ANGELA PLUS EVO (probable) | `I_CANAL` | 0 | 2 | 1 |
 | `001282507001` | ANGELA PLUS EVO | `I_CANAL` | 0 | 2 | 1 |
 | `001282508001` | ANGELA PLUS EVO | `I_CANAL` | 0 | 2 | 1 |
-| `001284003001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001284053001` |  | `I_CANAL` | 0 | 2 | 1 |
+| `001284003001` | DAHIANA (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001284053001` | DAHIANA PLUS (probable) | `I_CANAL` | 0 | 2 | 1 |
 | `001284300000` | ROSANNA IDRO | `I_IDRO` | 1 | 1 | 0 |
 | `001284301000` | ROSANNA IDRO | `I_IDRO` | 1 | 1 | 0 |
 | `001284302000` | ROSANNA IDRO | `I_IDRO` | 1 | 1 | 0 |
@@ -175,32 +175,32 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001284601000` | SINFONY | `I_VENT_3` | 0 | 3 | 0 |
 | `001284700000` |  | `I_VENT` | 0 | 2 | 0 |
 | `001284701000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283500002` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283500002` | AMIKA (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283501002` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502002` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503002` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283500003` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283500003` | AMIKA (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283501003` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283502003` | AMIKA | `I_VENT` | 0 | 2 | 0 |
 | `001283503003` | AMIKA | `I_VENT` | 0 | 2 | 0 |
-| `001283600002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283601002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283602002` |  | `I_VENT` | 0 | 2 | 0 |
+| `001283600002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283601002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283602002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001283603002` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283604002` | DEBBY | `I_VENT` | 0 | 2 | 0 |
 | `001283605002` | DEBBY | `I_VENT` | 0 | 2 | 0 |
-| `001283606000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283606001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283606002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283607000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283607001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283607002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283608000` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283608001` |  | `I_VENT` | 0 | 2 | 0 |
-| `001283608002` |  | `I_VENT` | 0 | 2 | 0 |
-| `001282103000` |  | `I_IDRO_2` | 11 | 1 | 0 |
-| `001282104000` |  | `I_IDRO_2` | 11 | 1 | 0 |
-| `001281703000` |  | `I_VENT_5` | 10 | 1 | 0 |
+| `001283606000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283606001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283606002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283607000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283607001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283607002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283608000` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283608001` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001283608002` | DEBBY (probable) | `I_VENT` | 0 | 2 | 0 |
+| `001282103000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 11 | 1 | 0 |
+| `001282104000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 11 | 1 | 0 |
+| `001281703000` | MIETTA EVO (probable) | `I_VENT_5` | 10 | 1 | 0 |
 | `001283300002` | COMFORT P85 | `I_VENT_2` | 0 | 2 | 0 |
 | `001283350002` | COMFORT P85 PLUS | `I_CANAL_3` | 0 | 2 | 12 |
 | `001283400002` | COMFORT P70 AIR | `I_VENT_2` | 0 | 2 | 0 |
@@ -233,7 +233,7 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `004273111000` |  | `I_CANAL` | 0 | 2 | 1 |
 | `001285400000` | PAMELA STEEL | `I_VENT` | 0 | 2 | 0 |
 | `001285401000` | PAMELA STEEL | `I_VENT` | 0 | 2 | 0 |
-| `001285402000` |  | `I_VENT` | 0 | 2 | 0 |
+| `001285402000` | PAMELA STEEL ou PAMELA CRYSTAL (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001275706000` | SOUVENIR LUX EVO | `I_VENT` | 0 | 2 | 0 |
 | `001275707000` | SOUVENIR LUX EVO | `I_VENT` | 0 | 2 | 0 |
 | `001275708000` | SOUVENIR LUX EVO | `I_VENT` | 0 | 2 | 0 |
@@ -248,7 +248,7 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001275754001` | SOUVENIR STEEL EVO | `I_VENT` | 0 | 2 | 0 |
 | `001275755001` | SOUVENIR STEEL EVO | `I_VENT` | 0 | 2 | 0 |
 | `001275756001` | SOUVENIR STEEL EVO | `I_VENT` | 0 | 2 | 0 |
-| `001280103000` |  | `I_VENT` | 0 | 2 | 0 |
+| `001280103000` | ANNABELLA AD EVO (probable) | `I_VENT` | 0 | 2 | 0 |
 | `001280104000` | ANNABELLA AD EVO | `I_VENT` | 0 | 2 | 0 |
 | `001280105000` | ANNABELLA AD EVO | `I_VENT` | 0 | 2 | 0 |
 | `001280106000` | ANNABELLA AD EVO | `I_VENT` | 0 | 2 | 0 |
@@ -260,13 +260,13 @@ Colonnes : eau (0 = poêle à air), ventilateurs tangentiels, canalisations. Les
 | `001280213001` | KETTY EVO 2.0 | `I_VENT` | 0 | 2 | 0 |
 | `001280214001` | KETTY EVO 2.0 | `I_VENT` | 0 | 2 | 0 |
 | `001280215001` | KETTY EVO 2.0 | `I_VENT` | 0 | 2 | 0 |
-| `001281706000` |  | `I_VENT_3` | 0 | 3 | 0 |
-| `001281707000` |  | `I_VENT_3` | 0 | 3 | 0 |
-| `001282105000` |  | `I_IDRO_2` | 1 | 1 | 0 |
+| `001281706000` | MIETTA EVO (probable) | `I_VENT_3` | 0 | 3 | 0 |
+| `001281707000` | MIETTA EVO (probable) | `I_VENT_3` | 0 | 3 | 0 |
+| `001282105000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 1 | 1 | 0 |
 | `001282106000` | FIANDRA IDRO EVO | `I_IDRO_2` | 1 | 1 | 0 |
-| `001282107000` |  | `I_IDRO_2` | 1 | 1 | 0 |
-| `001282108000` |  | `I_IDRO_2` | 1 | 1 | 0 |
-| `001282109000` |  | `I_IDRO_2` | 1 | 1 | 0 |
+| `001282107000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 1 | 1 | 0 |
+| `001282108000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 1 | 1 | 0 |
+| `001282109000` | FIANDRA IDRO EVO (probable) | `I_IDRO_2` | 1 | 1 | 0 |
 | `001280508000` | GIUSY EVO 2.0 | `I_VENT` | 0 | 2 | 0 |
 | `001280509000` | GIUSY EVO 2.0 | `I_VENT` | 0 | 2 | 0 |
 | `001280510000` | GIUSY EVO 2.0 | `I_VENT` | 0 | 2 | 0 |
