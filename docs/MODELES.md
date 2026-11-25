@@ -1,6 +1,6 @@
 # Codes de modèle Extraflame et type de poêle
 
-Le firmware du module Black Label (v1.8) contient une table de **239 codes de modèle** à 12 chiffres. Pour chaque code, il donne le **type de poêle**, qui choisit le bloc de registres à utiliser (voir [REGISTRES.md](REGISTRES.md)), et trois valeurs par défaut : produit à eau, nombre de ventilateurs tangentiels, nombre de canalisations. Le module relit ensuite ces trois valeurs dans le poêle et les garde en mémoire.
+Le firmware du module Black Label (v1.8) contient une table de **239 codes de modèle** à 12 chiffres. Pour chaque code, il donne le **type de poêle**, qui choisit le bloc de registres à utiliser (voir [REGISTRES.md](REGISTRES.md)), et trois valeurs par défaut : produit à eau, nombre de ventilateurs tangentiels, nombre de canalisations. Ces trois valeurs peuvent ensuite être remplacées par des valeurs enregistrées dans le module (ses journaux parlent de valeurs « récupérées de l'EEPROM »).
 
 Tout est lu tel quel dans le firmware. Rien n'est vérifié sur un poêle, sauf la ligne de la Teodora Evo.
 
@@ -8,7 +8,7 @@ Tout est lu tel quel dans le firmware. Rien n'est vérifié sur un poêle, sauf 
 
 1. Il lit le code de modèle enregistré dans le module (champ `stove_model`) et le cherche dans la table.
 2. Le type est celui de la ligne trouvée.
-3. Exception : le premier code, `009278451000`, est un code générique. Pour lui, si le module a déjà déterminé un type en interrogeant le poêle, c'est ce type qui est pris ; sinon c'est `I_VENT`.
+3. Exception : pour le premier code, `009278451000`, le module prend à la place un type gardé dans une variable à part, quand elle est renseignée ; sinon c'est `I_VENT`. D'où vient cette variable n'est pas encore établi (probablement d'une identification du poêle, d'après les messages « could not choose stove firmware type »).
 
 Le numéro du type est son rang dans cette liste, en partant de 0 : `I_IDRO`, `I_IDRO_2`, `I_VENT`, `I_VENT_2`, `I_VENT_3`, `I_VENT_4`, `I_VENT_5`, `I_CANAL`, `I_CANAL_2`, `I_CANAL_3`, `I_CANAL_4`, `I_CALD`.
 
@@ -29,7 +29,7 @@ Le numéro du type est son rang dans cette liste, en partant de 0 : `I_IDRO`, `I
 | `I_CANAL_4` | 1 |
 | `I_CALD` | 0 |
 
-Trois types (`I_VENT_4`, `I_VENT_5` hors un modèle, `I_CALD`) n'ont aucun ou presque aucun modèle dans la table : ils ne sont atteints que par le choix fait en interrogeant le poêle.
+Trois types (`I_VENT_4`, `I_VENT_5` hors un modèle, `I_CALD`) n'ont aucun ou presque aucun modèle dans la table : ils ne peuvent être atteints que par l'exception ci-dessus.
 
 ## Table
 

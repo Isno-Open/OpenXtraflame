@@ -36,7 +36,7 @@ Tout le reste est **lu dans la table, non vérifié**. Une mesure par ligne est 
 - **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). OpenXtraflame écrit `0xAE` sur la Teodora : à vérifier, ou à réserver aux poêles `I_VENT_5`.
 - Les adresses `0xDF`, `0xE0` et `0xE2` que `micronova.h` attribue à la trémie vide, à la cause de la veille et à la modulation pour la famille ventilée sont celles des températures de ballon et de chaudière (`I_CALD`, `I_IDRO`). Pour `I_VENT`, la modulation est en `0xA5`, et la trémie et la cause de la veille n'existent pas.
 - Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types.
-- La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)). Le module de la Teodora Evo mesurée porte le code générique `009278451000`, qui donne `I_VENT` par défaut : pour ce type, l'interrupteur général de programmation (`0xAE`) n'existe pas. Reste à savoir si le module corrige ce type après avoir interrogé le poêle.
+- La table des 239 codes de modèle est décodée ([MODELES.md](MODELES.md)). Le module de la Teodora Evo mesurée porte le code générique `009278451000`, qui donne `I_VENT` par défaut : pour ce type, l'interrupteur général de programmation (`0xAE`) n'existe pas. Reste à savoir si le module remplace ce type par un autre (voir l'exception décrite dans MODELES.md).
 
 ## Bornes des réglages (EEPROM)
 
