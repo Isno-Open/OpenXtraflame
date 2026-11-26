@@ -149,11 +149,10 @@ async function loadStatus() {
                 return `<tr style="border-top:1px solid var(--border)"><td style="padding:6px 8px"><strong>${n}</strong></td><td style="padding:6px 8px">${hours[i]}</td><td style="padding:6px 8px">${conso[i].toFixed(2)}</td><td style="padding:6px 8px">${totals[i].toFixed(0)}</td><td style="padding:6px 8px">${pct}%</td></tr>`;
             }).join('');
         }
-        /* Enum Extraflame TotalControl (0x21 machineState) */
-        const STATES = ['Off','Check up','Ignition','Préparation','Préchargement','Modulation','En marche','Nettoyage','Refroidissement','Veille','Nettoyage final','Recovery','Allumage final'];
+        /* Le libellé vient du firmware (mn_state_label) : la page ne tient pas sa propre table. */
         if ($('m-state')) {
             const st = s.stove?.state ?? null;
-            $('m-state').textContent = st == null ? '-' : (STATES[st] || 'état ' + st);
+            $('m-state').textContent = st == null ? '-' : (s.stove?.state_label || 'état ' + st);
         }
         /* Stove identity info (=Phase 3 auto-detection) */
         if ($('info-stove-type'))  $('info-stove-type').textContent  = s.stove?.stove_type  || '-';

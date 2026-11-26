@@ -134,6 +134,7 @@ static esp_err_t handle_status_json(httpd_req_t *req)
     cJSON *stove = cJSON_CreateObject();
     cJSON_AddBoolToObject(stove, "online", s.online);
     cJSON_AddNumberToObject(stove, "state", s.state);
+    cJSON_AddStringToObject(stove, "state_label", mn_state_label(s.state));
     cJSON_AddNumberToObject(stove, "power", s.power_level);
     cJSON_AddNumberToObject(stove, "setpoint", s.set_temperature);
     cJSON_AddNumberToObject(stove, "hours_total",  s.hours_total);

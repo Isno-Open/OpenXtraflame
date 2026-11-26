@@ -854,11 +854,14 @@ esp_err_t mqtt_bridge_publish_discovery(void)
         cJSON *p = cJSON_CreateObject();
         cJSON_AddStringToObject(p, "name", "État poêle");
         cJSON_AddStringToObject(p, "state_topic", state_topic);
-        cJSON_AddStringToObject(p, "value_template",
-            "{% set s = value_json.state %}"
-            "{{ {0:'Off',1:'Allumage',2:'Chargement pellets',3:'Ignition',"
-            "4:'En marche',5:'Nettoyage brasier',6:'Nettoyage final',"
-            "7:'Standby',8:'Alarme',9:'Alarme mémoire'}.get(s, 'Inconnu') }}");
+        /* Gabarit construit depuis mn_state_label : une seule table des libellés. */
+        char tpl[512];
+        int n = snprintf(tpl, sizeof(tpl), "{%% set s = value_json.state %%}{{ {");
+        for (int i = 0; i < MN_STATE_COUNT && n < (int)sizeof(tpl); i++)
+            n += snprintf(tpl + n, sizeof(tpl) - n, "%s%d:'%s'", i ? "," : "", i, mn_state_label(i));
+        if (n < (int)sizeof(tpl))
+            snprintf(tpl + n, sizeof(tpl) - n, "}.get(s, '%s') }}", mn_state_label(-1));
+        cJSON_AddStringToObject(p, "value_template", tpl);
         publish_disco("sensor", "state", p);
     }
 
