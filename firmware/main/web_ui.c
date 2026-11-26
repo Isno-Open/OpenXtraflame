@@ -1193,29 +1193,10 @@ esp_err_t web_ui_start(app_config_t *cfg)
 {
     g_cfg = cfg;
 
-    httpd_config_t hd = HTTPD_DEFAULT_CONFIG();
-    /* Enable wildcard matching pour /api/stove/power et setpoint routes.
-     * Sans ça, l'étoile est literal et POST /api/stove/power/3 -> 404.
-     * Bug latent : HA passe par MQTT donc marche, mais l'UI web POST 404. */
-    hd.uri_match_fn        = httpd_uri_match_wildcard;
-    hd.max_uri_handlers   = 40;   /* room for the current 34 routes + margin;
-                                   * remember to grow this whenever a handler
-                                   * is added, ESP-IDF silently drops the
-                                   * overflow entries with only a W log line
-                                   * that's easy to miss. */
-    hd.stack_size         = 6144; /* default 4096 stack-overflows during esp_ota_end()
-                                   * SHA256 verify at the end of an OTA upload (=beta15
-                                   * dump). 6144 leaves headroom without triggering the
-                                   * LwIP RST issue that a full 8192 bump did. */
-    /* Everything else stays at the ESP-IDF default. Earlier revisions bumped
-     * max_open_sockets, recv/send_wait_timeout and set lru_purge_enable=true.
-     * On Black Label hardware those combinations produced a silent LwIP RST
-     * on the first browser GET with zero httpd_* log line, so we still keep
-     * them at the default. Only the stack_size bump was necessary. */
-    httpd_handle_t server = NULL;
-    ESP_ERROR_CHECK(httpd_start(&server, &hd));
-
-    httpd_uri_t routes[] = {
+    /* Table des routes, declaree AVANT la configuration du serveur : sa taille
+     * donne max_uri_handlers. ESP-IDF abandonne en silence les routes au-dela de
+     * cette limite (un simple avertissement dans le journal). */
+    static const httpd_uri_t routes[] = {
         { .uri = "/",                     .method = HTTP_GET,  .handler = handle_index,        },
         { .uri = "/style.css",            .method = HTTP_GET,  .handler = handle_css,          },
         { .uri = "/script.js",            .method = HTTP_GET,  .handler = handle_js,           },
@@ -1269,8 +1250,31 @@ esp_err_t web_ui_start(app_config_t *cfg)
         { .uri = "/debug/poll-interval",  .method = HTTP_GET,  .handler = handle_poll_interval,    },
         { .uri = "/debug/poll-interval",  .method = HTTP_POST, .handler = handle_poll_interval,    },
     };
-    for (size_t i = 0; i < sizeof(routes) / sizeof(routes[0]); i++) {
-        httpd_register_uri_handler(server, &routes[i]);
+    const size_t route_count = sizeof(routes) / sizeof(routes[0]);
+
+    httpd_config_t hd = HTTPD_DEFAULT_CONFIG();
+    /* Enable wildcard matching pour /api/stove/power et setpoint routes.
+     * Sans ça, l'étoile est literal et POST /api/stove/power/3 -> 404.
+     * Bug latent : HA passe par MQTT donc marche, mais l'UI web POST 404. */
+    hd.uri_match_fn        = httpd_uri_match_wildcard;
+    hd.max_uri_handlers   = route_count;
+    hd.stack_size         = 6144; /* default 4096 stack-overflows during esp_ota_end()
+                                   * SHA256 verify at the end of an OTA upload (=beta15
+                                   * dump). 6144 leaves headroom without triggering the
+                                   * LwIP RST issue that a full 8192 bump did. */
+    /* Everything else stays at the ESP-IDF default. Earlier revisions bumped
+     * max_open_sockets, recv/send_wait_timeout and set lru_purge_enable=true.
+     * On Black Label hardware those combinations produced a silent LwIP RST
+     * on the first browser GET with zero httpd_* log line, so we still keep
+     * them at the default. Only the stack_size bump was necessary. */
+    httpd_handle_t server = NULL;
+    ESP_ERROR_CHECK(httpd_start(&server, &hd));
+
+    for (size_t i = 0; i < route_count; i++) {
+        esp_err_t reg = httpd_register_uri_handler(server, &routes[i]);
+        if (reg != ESP_OK) {
+            ESP_LOGE(TAG, "route %s not registered: %s", routes[i].uri, esp_err_to_name(reg));
+        }
     }
 
     ESP_LOGI(TAG, "Web UI listening on :80");

@@ -5,12 +5,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.esp-idf
-    image: openextraflame/esp-idf:v5.2.2
+    image: openextraflame/esp-idf
     container_name: openextraflame-build
     volumes:
-      - ./firmware:/project
+      # La racine du depot, pas firmware/ seul : le brochage est engendre
+      # depuis boards/<carte>.json par tools/gen_board.py.
+      - .:/project
       - ./web:/web
-    working_dir: /project
+    working_dir: /project/firmware
     environment:
       - IDF_TARGET=esp32
     devices:
@@ -23,6 +25,6 @@ services:
 # Usage :
 #   docker compose build
 #   docker compose run --rm esp-idf idf.py set-target esp32
-#   docker compose run --rm esp-idf idf.py -DOPENXFLAME_TARGET=external build
-#   docker compose run --rm esp-idf idf.py -DOPENXFLAME_TARGET=blacklabel build
+#   docker compose run --rm esp-idf idf.py -B build-external -DBOARD=external build
+#   docker compose run --rm esp-idf idf.py -B build-blacklabel -DBOARD=blacklabel build
 #   docker compose run --rm esp-idf idf.py -p /dev/ttyUSB0 flash monitor

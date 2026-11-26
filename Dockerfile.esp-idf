@@ -1,4 +1,6 @@
-FROM espressif/idf:v5.2.2
+# La version d'ESP-IDF du projet se declare ICI et nulle part ailleurs :
+# scripts/release.sh et docker-compose.yml la lisent dans cette ligne.
+FROM espressif/idf:v6.1
 
 WORKDIR /project
 

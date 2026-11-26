@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/Isno-Open/OpenXtraflame)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/Isno-Open/OpenXtraflame?style=social)](https://github.com/Isno-Open/OpenXtraflame)
 [![Issues](https://img.shields.io/github/issues/Isno-Open/OpenXtraflame)](https://github.com/Isno-Open/OpenXtraflame/issues)
-[![ESP-IDF](https://img.shields.io/badge/ESP--IDF-v5.2.7-red?logo=espressif)](https://github.com/espressif/esp-idf)
+[![ESP-IDF](https://img.shields.io/badge/ESP--IDF-docker-red?logo=espressif)](https://github.com/espressif/esp-idf)
 [![HA](https://img.shields.io/badge/Home%20Assistant-integrated-blue?logo=home-assistant)](https://home-assistant.io)
 
 Custom firmware open-source pour les poêles à granulés Extraflame (et compatibles Micronova).
@@ -185,13 +185,13 @@ Voir :
 ## Build
 
 ```bash
-# ESP-IDF v5.2.7 requis (via docker recommandé)
-cd firmware
-docker run --rm -v $PWD:/project -w /project espressif/idf:v5.2.7 idf.py build
+# Les deux cibles, dans le conteneur ESP-IDF du projet (version : Dockerfile.esp-idf)
+bash scripts/release.sh
 
-# Ou build cible external :
-docker run --rm -v $PWD:/project -w /project espressif/idf:v5.2.7 \
-  bash -c "idf.py -DBOARD=external build"
+# Ou une seule carte, à la main :
+docker compose build
+docker compose run --rm esp-idf idf.py -B build-blacklabel -DBOARD=blacklabel build
+docker compose run --rm esp-idf idf.py -B build-external -DBOARD=external build
 ```
 
 Voir [docs/BUILDING.md](docs/BUILDING.md).

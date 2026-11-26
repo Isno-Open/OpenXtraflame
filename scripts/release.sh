@@ -10,16 +10,19 @@
 # La version vient de PROJECT_VER dans firmware/CMakeLists.txt, seule declaration.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-IMAGE="${IDF_IMAGE:-espressif/idf:v5.2.7}"
+# La version d'ESP-IDF est declaree dans Dockerfile.esp-idf, seule source.
+IMAGE="${IDF_IMAGE:-$(sed -n 's/^FROM //p' "$ROOT/Dockerfile.esp-idf")}"
+[ -n "$IMAGE" ] || { echo "image ESP-IDF introuvable dans Dockerfile.esp-idf"; exit 1; }
 cd "$ROOT/firmware"
 VER=$(sed -n 's/^set(PROJECT_VER "\(.*\)")/\1/p' CMakeLists.txt)
 [ -n "$VER" ] || { echo "PROJECT_VER introuvable"; exit 1; }
 mkdir -p "$ROOT/dist"
-run() { docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$ROOT/firmware":/w -w /w "$IMAGE" bash -c "$*"; }
+# On monte la racine du depot : le brochage vient de boards/<carte>.json.
+run() { docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$ROOT":/w -w /w/firmware "$IMAGE" bash -c "$*"; }
 for target in blacklabel external; do
   B="build-$target"
   echo "== $target ($VER, $IMAGE)"
-  run "idf.py -B $B -DSDKCONFIG=$B/sdkconfig -DIDF_TARGET=esp32 -DOPENXFLAME_TARGET=$target build" | tail -n 3
+  run "idf.py -B $B -DSDKCONFIG=$B/sdkconfig -DIDF_TARGET=esp32 -DBOARD=$target build" | tail -n 3
   [ "$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['project_version'])" "$B/project_description.json")" = "$VER" ] || { echo "version compilee != $VER"; exit 1; }
   cp "$B/openextraflame.bin" "$ROOT/dist/openextraflame-$target.bin"
   P="$ROOT/dist/pkg-$target"; rm -rf "$P"; mkdir -p "$P"

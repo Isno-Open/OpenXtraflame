@@ -2,7 +2,7 @@
 
 ## Prérequis
 
-- Docker + Docker Compose OU installation manuelle ESP-IDF v5.2+
+- Docker + Docker Compose OU installation manuelle d'ESP-IDF, à la version déclarée dans `Dockerfile.esp-idf`
 - USB-UART adaptateur (=CH340G, CP2102, FT232) 3.3V logic
 - ESP32 dev board OU module Extraflame Black Label
 
