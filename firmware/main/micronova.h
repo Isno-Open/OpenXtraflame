@@ -74,10 +74,12 @@ typedef enum {
      * EEPROM 0x7D=consigne (=27 quand écran affiche 27). */
     MN_EEP_POWER_SET_IVENT   = 0x17F,  // EEPROM_SET_POWER_ADDR pour I_VENT
     MN_EEP_TEMP_SET_IVENT    = 0x17D,  // EEPROM_SET_AMB_ADDR pour I_VENT
-    /* Registres RAM I_VENT dérivés via Addrs_dyn @ 0x6491c (=table complète) */
-    MN_RAM_SERBATORIO_VUOTO  = 0x0DF,  // Trémie vide (=1 quand plus de pellets)
-    MN_RAM_CAUSA_STATO7      = 0x0E0,  // Cause de l'état 7 (=raison arrêt/blocage)
-    MN_RAM_MODULATION        = 0x0E2,  // Modulation actuelle
+    /* RAM_MOD_ADDR de la carte Addrs_dyn pour I_VENT. Les anciennes adresses 0xDF, 0xE0 et
+     * 0xE2 étaient celles des sondes ballon et tampon des poêles HYDRO : sur un ventilé elles
+     * rendent toutes 0x20 (lu sur Teodora Evo le 2026-11-26, d'où une « trémie vide » en
+     * permanence). La carte d'origine ne donne AUCUNE adresse de trémie vide, pour aucun
+     * type, ni de cause d'arrêt pour un ventilé : ces deux grandeurs ne sont plus lues. */
+    MN_RAM_MODULATION        = 0x0A5,  // Modulation actuelle
     /* Compteurs maintenance (=firmware reverse, table I_VENT, 16-bit LSB+MSB).
      * Heures par niveau P1..P5 + total + nombre de démarrages. */
     MN_EEP_CTR_H_P1_LSB      = 0x1D0,  // COUNTERS_H_1_LSB
@@ -124,10 +126,10 @@ typedef enum {
     MN_RAM_STOVE_STATUS      = MN_RAM_STOVE_STATE,
     MN_RAM_T_FUMI            = MN_RAM_FUMES_TEMP,
     MN_RAM_POT_REALE         = MN_RAM_POWER_GET,   /* now empirically = pwr%2 or step */
-    MN_RAM_ALLARM            = 0x40,               /* WARN: guess, non validé */
+    MN_RAM_ALLARM            = 0x33,               /* RAM_ALLARM_ADDR, tous types (Addrs_dyn) */
     MN_RAM_ACCENDI           = MN_RAM_STOVE_STATE, /* ON = write 0x21 = 1 */
     MN_RAM_SPEGNI            = MN_RAM_STOVE_STATE, /* OFF = write 0x21 = 6 */
-    MN_RAM_SBLOCCO           = 0x41,               /* WARN: guess */
+    MN_RAM_SBLOCCO           = 0x06,               /* RAM_SBLOCCO_ADDR, tous types ; jamais écrit */
     MN_RAM_T_CAMERA          = MN_RAM_FUMES_TEMP,  /* alias approx */
 
     MN_RAM_MAX               = 0x200,
@@ -208,8 +210,6 @@ typedef struct {
     /* État nettoyage automatique brasero (=STATO_PUL_ORD_*, N/A pour I_VENT) */
     uint8_t          cleaning_state;        /* 0=off, 1=apertura, 2=aperto, 3=chiusura */
     /* Trémie et cause état 7 (=I_VENT Addrs_dyn) */
-    bool             tremie_vide;           /* SERBATORIO_VUOTO : true si plus de pellets */
-    uint8_t          causa_stato7;          /* Raison arrêt/blocage si state=7 */
     uint8_t          modulation;            /* Modulation actuelle (=0-100) */
 } mn_stove_state_snapshot_t;
 

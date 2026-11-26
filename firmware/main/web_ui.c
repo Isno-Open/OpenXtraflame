@@ -161,7 +161,6 @@ static esp_err_t handle_status_json(httpd_req_t *req)
     cJSON_AddNumberToObject(stove, "starts_before_cleaning", s.starts_before_cleaning);
     cJSON_AddNumberToObject(stove, "alarm_code",           s.alarm_code);
     cJSON_AddNumberToObject(stove, "modulation",           s.modulation);
-    cJSON_AddBoolToObject(stove,   "tremie_vide",          s.tremie_vide);
     cJSON_AddItemToObject(o, "stove", stove);
 
     char *out = cJSON_PrintUnformatted(o);
