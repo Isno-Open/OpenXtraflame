@@ -295,9 +295,7 @@ esp_err_t mqtt_bridge_publish_state(void)
     cJSON_AddNumberToObject(o, "starts_since_cleaning",   s.starts_since_cleaning);
     cJSON_AddNumberToObject(o, "starts_before_cleaning",  s.starts_before_cleaning);
     /* Trémie + modulation + cause arrêt (=I_VENT Addrs_dyn reverse) */
-    cJSON_AddBoolToObject(o,   "tremie_vide",             s.tremie_vide);
     cJSON_AddNumberToObject(o, "modulation",              s.modulation);
-    cJSON_AddNumberToObject(o, "causa_stato7",            s.causa_stato7);
 #ifdef TARGET_BLACKLABEL
     /* Cloud state pour HA discovery / debug (=blacklabel only) */
     {
@@ -1027,18 +1025,12 @@ esp_err_t mqtt_bridge_publish_discovery(void)
         publish_disco("sensor", "combustion_diag", p);
     }
 
-    /* --- Binary sensor Trémie vide (=alerte pellets épuisés) --- */
+    /* L'ancien capteur « Trémie vide » lisait une adresse des poêles hydro : on efface sa
+     * découverte retenue pour qu'il disparaisse de Home Assistant. */
     {
-        cJSON *p = cJSON_CreateObject();
-        cJSON_AddStringToObject(p, "name", "Trémie vide");
-        cJSON_AddStringToObject(p, "state_topic", state_topic);
-        cJSON_AddStringToObject(p, "value_template",
-            "{{ 'ON' if value_json.tremie_vide else 'OFF' }}");
-        cJSON_AddStringToObject(p, "payload_on",  "ON");
-        cJSON_AddStringToObject(p, "payload_off", "OFF");
-        cJSON_AddStringToObject(p, "device_class", "problem");
-        cJSON_AddStringToObject(p, "icon", "mdi:tank");
-        publish_disco("binary_sensor", "tremie_vide", p);
+        char t[192];
+        snprintf(t, sizeof(t), "homeassistant/binary_sensor/%s/tremie_vide/config", device_id);
+        esp_mqtt_client_publish(client, t, "", 0, 1, 1);
     }
 
     /* --- Sensor modulation --- */

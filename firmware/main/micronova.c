@@ -209,8 +209,6 @@ static void update_snapshot_from_shadow(void)
     /* Décomposition bits d'alarme (=ordre firmware original, cf docs/CLOUD) */
     {
         uint8_t a = mn_snapshot.alarm_code;
-        mn_snapshot.tremie_vide         = (mn_ram_shadow[MN_RAM_SERBATORIO_VUOTO] != 0);
-        mn_snapshot.causa_stato7        = mn_ram_shadow[MN_RAM_CAUSA_STATO7];
         mn_snapshot.modulation          = mn_ram_shadow[MN_RAM_MODULATION];
         mn_snapshot.alarm_sonda_fumi    = !!(a & 0x01);
         mn_snapshot.alarm_hot_fumi      = !!(a & 0x02);
@@ -321,9 +319,8 @@ static void init_poll_list(void) {
         MN_EEP_POWER_SET_IVENT,   /* 0x17F = EEPROM 0x7F */
         MN_EEP_TEMP_SET_IVENT,    /* 0x17D = EEPROM 0x7D */
         /* Registres RAM I_VENT dérivés Addrs_dyn 2026-07-09 */
-        MN_RAM_SERBATORIO_VUOTO,  /* 0x0DF - trémie vide */
-        MN_RAM_CAUSA_STATO7,      /* 0x0E0 - raison arrêt */
-        MN_RAM_MODULATION,        /* 0x0E2 */
+        MN_RAM_MODULATION,        /* 0x0A5 */
+        MN_RAM_ALLARM,            /* 0x033 */
         /* Compteurs maintenance (=14 addresses EEPROM) */
         MN_EEP_CTR_H_TOT_LSB,  MN_EEP_CTR_H_TOT_MSB,
         MN_EEP_CTR_STARTS_LSB, MN_EEP_CTR_STARTS_MSB,
