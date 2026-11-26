@@ -188,7 +188,12 @@ static void update_snapshot_from_shadow(void)
     /* P.set = source EEPROM 0x7F uniquement (=persistant, stable, plus de fallback
      * RAM 0x4F qui fait sauter la valeur sur le buffer d'affichage fluctuant). */
     mn_snapshot.power_level     = mn_ram_shadow[MN_EEP_POWER_SET_IVENT];
-    mn_snapshot.power_real      = mn_ram_shadow[MN_RAM_POWER_REAL];
+    /* POT_REALE (0x34) n'est pas un niveau : le module d'origine en tire le niveau 1..5 par
+     * (octet / 4) + 1, et seulement en marche. Vérifié sur Teodora Evo le 2026-11-26 :
+     * 12, 11 puis 9 lus pendant que l'afficheur descend de 4 à 3. Hors marche : 0. */
+    mn_snapshot.power_real      = (mn_snapshot.state == MN_STATE_WORK)
+        ? (uint8_t)((mn_ram_shadow[MN_RAM_POWER_REAL] >> MN_POWER_REAL_SHIFT) + 1)
+        : 0;
     mn_snapshot.stove_type      = mn_detected_stove_type();
     {
         uint8_t prev_alarm = mn_snapshot.alarm_code;
@@ -1404,4 +1409,15 @@ char *mn_debug_dump_json(void)
     char *s = cJSON_PrintUnformatted(out);
     cJSON_Delete(out);
     return s;
+}
+
+static const char *const mn_state_labels[MN_STATE_COUNT] = {
+    "Off", "Allumage", "Chargement pellets", "Ignition", "En marche",
+    "Nettoyage brasier", "Nettoyage final", "Standby", "Alarme", "Alarme mémoire",
+};
+
+const char *mn_state_label(int state)
+{
+    if (state < 0 || state >= MN_STATE_COUNT) return "Inconnu";
+    return mn_state_labels[state];
 }

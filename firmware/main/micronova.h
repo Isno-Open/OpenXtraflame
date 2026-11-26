@@ -265,6 +265,15 @@ char *mn_sniffer_capture(int duration_ms);
 /* Send arbitrary TX bytes and capture whatever arrives on RX within
  * timeout_ms. Master task is paused for the duration. tx_hex is a
  * space-separated hex string (e.g. "20 00" or "0x00 0x21"). Caller frees. */
+/* Libellé de l'état du poêle (RAM 0x21), numérotation MICRONOVA du bus : 4 = en marche.
+ * SEULE définition : la page web la reçoit par status.json, Home Assistant par le gabarit
+ * de découverte construit depuis cette table. La numérotation du cloud TotalControl
+ * (4 = préchargement) est une autre table et ne s'applique pas à la valeur lue sur le bus. */
+#define MN_STATE_COUNT 10
+/* POT_REALE compte en quarts de niveau : décalage de 2 bits pour retrouver le niveau. */
+#define MN_POWER_REAL_SHIFT 2
+const char *mn_state_label(int state);
+
 char *mn_raw_tx(const char *tx_hex, int timeout_ms);
 
 /* Same but with an optional SLIP wrapper (=C0 payload C0 + escape rules). */
