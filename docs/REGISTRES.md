@@ -31,6 +31,9 @@ Lecture : `loc 0x00` pour la RAM, `0x20` pour l'EEPROM ; écriture : `0x80` pour
 | `RAM_STATO_GESTITO` | `0xE8` | 16 (`0x10`) au repos comme en marche ; rien n'y a été écrit |
 | `RAM_ALLARM_ADDR` | `0x33` | 0 sans alarme (`0x40`, l'adresse supposée avant, vaut 205 dans le même état) |
 | `RAM_MOD_ADDR` | `0xA5` | 1 en marche |
+| `EEPROM_SET_CHRONO1_START_ADDR` | `0x4D` | 17 quand l'écran affiche START PRG1 02:50 (dizaines de minutes) |
+| `EEPROM_SET_CHRONO1_STOP_ADDR` | `0x4E` | 23 quand l'écran affiche STOP PRG1 03:50 |
+| `EEPROM_SET_CHRONO_ENABLE1_ADDR` | `0xAF` | 0 quand l'écran affiche PRG 1 OFF |
 
 L'allumage par écriture de 1 dans `0x21` fonctionne sur ce poêle : états 1, 2, 3 puis 4 en onze minutes, `0xE8` inchangé.
 
@@ -88,7 +91,7 @@ La méthode de la communauté (écrire 1 ou 6 dans `0x21`) fonctionne sur la Teo
 
 ## Points ouverts
 
-- **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). La Teodora Evo (article `1275002`) est de type `I_VENT`, comme le code générique du module (`009278451000`) : l'écriture qu'OpenXtraflame fait en `0xAE` est à retirer ou à conditionner. Essai du 2026-11-26 sur la Teodora : la case accepte l'écriture (1 relu après avoir écrit 1), il reste à voir si l'afficheur du poêle la prend pour son interrupteur de programmation.
+- **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). Vérifié sur la Teodora Evo (type `I_VENT`) le 2026-11-26 : le menu de programmation de l'afficheur commence à « PRG 1 », sans écran général. La case `0xAE` accepte l'écriture mais le poêle n'en fait rien. OpenXtraflame n'y écrit plus.
 - **Tables dynamiques.** Le nom `Addrs_dyn` veut dire « adresses dynamiques » : les 12 blocs du firmware sont des valeurs par défaut, que le module peut corriger en mémoire. Il sait recevoir un texte, en plusieurs morceaux qu'il enregistre et recharge au démarrage, fait d'éléments séparés par des virgules. Chaque élément désigne une case par une lettre et un rang, ou par son nom complet, puis donne sa nouvelle valeur (hexadécimale ou décimale) :
 
   | Lettre | Ce qui est modifié, pour le type courant |
