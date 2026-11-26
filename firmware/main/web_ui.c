@@ -631,8 +631,7 @@ static esp_err_t handle_registers_live(httpd_req_t *req)
 
 /* GET  /api/chrono → dump les 4 programmes.
  * POST /api/chrono → applique modifs. Body :
- *   { "master_enabled": bool,
- *     "programs": [ { "id":1..4, "enabled":bool, "start":"HH:MM", "stop":"HH:MM",
+ *   { "programs": [ { "id":1..4, "enabled":bool, "start":"HH:MM", "stop":"HH:MM",
  *                     "temp_c": int, "days": [bool×7] } ] } */
 static esp_err_t handle_chrono(httpd_req_t *req)
 {
@@ -660,11 +659,6 @@ static esp_err_t handle_chrono(httpd_req_t *req)
         MN_EEP_CHRONO_EN1, MN_EEP_CHRONO_EN2, MN_EEP_CHRONO_EN3, MN_EEP_CHRONO_EN4
     };
     int writes = 0;
-    cJSON *m = cJSON_GetObjectItem(root, "master_enabled");
-    if (cJSON_IsBool(m)) {
-        mn_write_register(MN_EEP_CHRONO_ENABLE, cJSON_IsTrue(m) ? 1 : 0);
-        writes++;
-    }
     cJSON *progs = cJSON_GetObjectItem(root, "programs");
     if (cJSON_IsArray(progs)) {
         cJSON *pr;

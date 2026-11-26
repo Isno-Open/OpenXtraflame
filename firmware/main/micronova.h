@@ -96,8 +96,8 @@ typedef enum {
     MN_EEP_CTR_H_TOT_MSB     = 0x1EB,
     MN_EEP_CTR_STARTS_LSB    = 0x1EE,  // COUNTERS_STARTS (=nombre démarrages)
     MN_EEP_CTR_STARTS_MSB    = 0x1EF,
-    /* Chrono I_VENT - master enable + 4 programmes hebdo (=firmware reverse) */
-    MN_EEP_CHRONO_ENABLE     = 0x1AE,  // master on/off (=global chrono)
+    /* Chrono I_VENT : 4 programmes hebdo, SANS interrupteur général. 0xAE n'en est un que
+     * pour I_VENT_5 ; sur le Teodora Evo la case accepte l'écriture mais le poêle l'ignore. */
     MN_EEP_CHRONO_EN1        = 0x1AF,
     MN_EEP_CHRONO_EN2        = 0x1B0,
     MN_EEP_CHRONO_EN3        = 0x1B1,

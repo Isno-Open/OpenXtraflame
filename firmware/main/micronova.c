@@ -330,8 +330,7 @@ static void init_poll_list(void) {
         MN_EEP_CTR_H_P3_LSB,   MN_EEP_CTR_H_P3_MSB,
         MN_EEP_CTR_H_P4_LSB,   MN_EEP_CTR_H_P4_MSB,
         MN_EEP_CTR_H_P5_LSB,   MN_EEP_CTR_H_P5_MSB,
-        /* Chrono complet : 5 enables + 4 × 10 addresses par programme = 45 */
-        MN_EEP_CHRONO_ENABLE,
+        /* Chrono complet : 4 enables + 4 × 10 addresses par programme = 44 */
         MN_EEP_CHRONO_EN1, MN_EEP_CHRONO_EN2, MN_EEP_CHRONO_EN3, MN_EEP_CHRONO_EN4,
     };
     /* Ajoute les 40 addresses de programmes chrono (=start, stop, 7 days, temp × 4) */
@@ -1272,7 +1271,6 @@ char *mn_chrono_json(void)
     cJSON *o = cJSON_CreateObject();
     cJSON *progs = cJSON_CreateArray();
     if (xSemaphoreTake(mn_mutex, pdMS_TO_TICKS(50)) == pdTRUE) {
-        cJSON_AddBoolToObject(o, "master_enabled", mn_ram_shadow[MN_EEP_CHRONO_ENABLE] != 0);
         uint16_t en[4] = {
             mn_ram_shadow[MN_EEP_CHRONO_EN1], mn_ram_shadow[MN_EEP_CHRONO_EN2],
             mn_ram_shadow[MN_EEP_CHRONO_EN3], mn_ram_shadow[MN_EEP_CHRONO_EN4]
