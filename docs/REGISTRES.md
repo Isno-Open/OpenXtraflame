@@ -26,6 +26,15 @@ Lecture : `loc 0x00` pour la RAM, `0x20` pour l'EEPROM ; écriture : `0x80` pour
 | `RAM_TAMB_ADDR` | `0x01` | 61 = 30,5 °C |
 | `EEPROM_SET_POWER_ADDR` | `0x7F` | 4 quand l'écran affiche 4 |
 | `EEPROM_SET_AMB_ADDR` | `0x7D` | 27 quand l'écran affiche 27 |
+| `RAM_T_FUMI_ADDR` | `0x02` | octet + 30 = la valeur de `0x5A`, sur toute la montée de 76 à 126 °C (2026-11-26) |
+| `RAM_POT_REALE_ADDR` | `0x34` | 12, 11, 9 puis 2 pendant que le poêle redescend de la puissance 4 à sa consigne de 1 : (octet ÷ 4) + 1 |
+| `RAM_STATO_GESTITO` | `0xE8` | 16 (`0x10`) au repos comme en marche ; rien n'y a été écrit |
+| `RAM_ALLARM_ADDR` | `0x33` | 0 sans alarme (`0x40`, l'adresse supposée avant, vaut 205 dans le même état) |
+| `RAM_MOD_ADDR` | `0xA5` | 1 en marche |
+
+L'allumage par écriture de 1 dans `0x21` fonctionne sur ce poêle : états 1, 2, 3 puis 4 en onze minutes, `0xE8` inchangé.
+
+Sur ce poêle ventilé, `0xDF`, `0xE0` et `0xE2` rendent tous `0x20`, comme leurs voisines `0xE7` et `0xE9` : ce sont des cases sans contenu.
 
 Tout le reste est **lu dans la table, non vérifié**. Une mesure par ligne est bienvenue (issue GitHub avec le modèle, le type détecté et la valeur lue face à l'écran).
 
@@ -79,10 +88,7 @@ La méthode de la communauté (écrire 1 ou 6 dans `0x21`) fonctionne sur la Teo
 
 ## Points ouverts
 
-- **Température des fumées.** La table donne `RAM_T_FUMI` en `0x02` pour les 12 types, et le module y ajoute 30 avant de l'envoyer. La mesure sur la Teodora avait trouvé la valeur de l'écran directement en RAM `0x5A`. Les deux peuvent être vrais : à vérifier en lisant `0x02` et en comparant à l'écran moins 30.
-- Les adresses `0xDF`, `0xE0` et `0xE2` que `micronova.h` attribue à la trémie vide, à la cause de la veille et à la modulation pour la famille ventilée sont celles des températures de ballon et de chaudière (`I_CALD`, `I_IDRO`). Pour `I_VENT`, la modulation est en `0xA5`, et la trémie et la cause de la veille n'existent pas.
-- Les alarmes et le déblocage ne sont pas en `0x40` et `0x41`, comme on le lit parfois : la table donne `0x33` et `0x06` pour tous les types. Le module n'écrit jamais `RAM_SBLOCCO` ni `RAM_RESET_UTENTE` : son seul acquittement est celui de l'état 9, décrit plus haut.
-- **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). La Teodora Evo (article `1275002`) est de type `I_VENT`, comme le code générique du module (`009278451000`) : l'écriture qu'OpenXtraflame fait en `0xAE` est à retirer ou à conditionner.
+- **`EEPROM_SET_CHRONO_ENABLE_ADDR`** (interrupteur général de programmation) n'existe que pour `I_IDRO_2` (`0xB8`) et `I_VENT_5` (`0xAE`). La Teodora Evo (article `1275002`) est de type `I_VENT`, comme le code générique du module (`009278451000`) : l'écriture qu'OpenXtraflame fait en `0xAE` est à retirer ou à conditionner. Essai du 2026-11-26 sur la Teodora : la case accepte l'écriture (1 relu après avoir écrit 1), il reste à voir si l'afficheur du poêle la prend pour son interrupteur de programmation.
 - **Tables dynamiques.** Le nom `Addrs_dyn` veut dire « adresses dynamiques » : les 12 blocs du firmware sont des valeurs par défaut, que le module peut corriger en mémoire. Il sait recevoir un texte, en plusieurs morceaux qu'il enregistre et recharge au démarrage, fait d'éléments séparés par des virgules. Chaque élément désigne une case par une lettre et un rang, ou par son nom complet, puis donne sa nouvelle valeur (hexadécimale ou décimale) :
 
   | Lettre | Ce qui est modifié, pour le type courant |
