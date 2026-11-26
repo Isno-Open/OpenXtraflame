@@ -84,24 +84,33 @@ static void publish_reply(const char *reply_topic, const char *correlation_id,
  * accepte : machineState, targetPower, targetRoomTemp, targetWaterTemp,
  *          mainFanSpeed, mainFanMode, etc.
  * On mappe vers les registres EEPROM connus. */
-static void handle_in_settings(cJSON *o)
+/* Rend true seulement si au moins une clé connue a été écrite et qu'aucune
+ * n'a été refusée : c'est ce qui décide de l'acquittement « applied ». */
+static bool handle_in_settings(cJSON *o)
 {
     cJSON *v;
+    int handled = 0;
+    bool ok = true;
 
     v = cJSON_GetObjectItem(o, "machineState");
     if (cJSON_IsNumber(v)) {
-        /* Cf mqtt_bridge.c handle_command : STOVE_STATE=0x01 ON, =0x06 OFF */
-        uint8_t stcmd = ((int)v->valuedouble == 0) ? 0x06 : 0x01;
-        mn_write_register(MN_RAM_STOVE_STATE, stcmd);
+        /* Le module d'origine ignore la valeur et bascule selon l'état du
+         * poêle. Ici 0 éteint et le reste allume : à confronter au cloud
+         * avant de réactiver le pont. */
+        ok &= (((int)v->valuedouble == 0) ? mn_turn_off() : mn_turn_on()) == ESP_OK;
+        handled++;
     }
     v = cJSON_GetObjectItem(o, "targetPower");
     if (cJSON_IsNumber(v)) {
-        mn_write_register(MN_EEP_POWER_SET_IVENT, (uint8_t)v->valuedouble);
+        ok &= mn_set_power((int)v->valuedouble) == ESP_OK;
+        handled++;
     }
     v = cJSON_GetObjectItem(o, "targetRoomTemp");
     if (cJSON_IsNumber(v)) {
-        mn_write_register(MN_EEP_TEMP_SET_IVENT, (uint8_t)v->valuedouble);
+        ok &= mn_set_setpoint((int)v->valuedouble) == ESP_OK;
+        handled++;
     }
+    return ok && handled > 0;
 }
 #endif
 
@@ -119,19 +128,21 @@ static void on_data(esp_mqtt_event_handle_t event)
     if (!o) return;
     cJSON *cid = cJSON_GetObjectItem(o, "correlationid");
     cJSON *rt  = cJSON_GetObjectItem(o, "replyto");
+    bool applied = false;
 
 #ifdef TARGET_BLACKLABEL
     /* Route par family = dernier segment du topic */
     const char *family = strrchr(topic, '/');
     if (family) family++;
     if (family && strcmp(family, "settings") == 0) {
-        handle_in_settings(o);
+        applied = handle_in_settings(o);
     }
 #endif
 
     /* Ack REPLY */
     if (cJSON_IsString(cid) && cJSON_IsString(rt)) {
-        publish_reply(rt->valuestring, cid->valuestring, "\"applied\":true");
+        publish_reply(rt->valuestring, cid->valuestring,
+                      applied ? "\"applied\":true" : "\"applied\":false");
     }
     cJSON_Delete(o);
 }

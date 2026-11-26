@@ -1,3 +1,5 @@
+/* Bornes de la consigne, fournies par le firmware dans status.json. */
+let setpointLimits = null;
 /* openextraflame - Web UI script */
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
@@ -113,6 +115,13 @@ async function loadStatus() {
         $('m-tamb').textContent = s.stove?.t_ambient?.toFixed?.(1) ?? '-';
         if ($('m-setpoint')) $('m-setpoint').textContent = s.stove?.setpoint ?? '-';
         /* Pré-remplit les inputs éditables sans écraser si l'user est en train de taper */
+        if (s.stove?.setpoint_min != null) {
+            setpointLimits = { min: s.stove.setpoint_min, max: s.stove.setpoint_max };
+            if ($('m-setpoint-edit')) {
+                $('m-setpoint-edit').min = setpointLimits.min;
+                $('m-setpoint-edit').max = setpointLimits.max;
+            }
+        }
         if ($('m-setpoint-edit') && document.activeElement !== $('m-setpoint-edit') && s.stove?.setpoint != null)
             $('m-setpoint-edit').value = s.stove.setpoint;
         const p = s.stove?.power ?? null;
@@ -785,7 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <input type="time" data-prog="${p.id-1}" data-field="stop" value="${p.stop}" style="width:100%">
                             </label>
                             <label style="font-size:12px">Consigne (°C)
-                                <input type="number" min="1" max="30" data-prog="${p.id-1}" data-field="temp_c" value="${p.temp_c}" style="width:100%">
+                                <input type="number" min="${setpointLimits?.min ?? ''}" max="${setpointLimits?.max ?? ''}" data-prog="${p.id-1}" data-field="temp_c" value="${p.temp_c}" style="width:100%">
                             </label>
                         </div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">${dayCbs}</div>
@@ -838,7 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if ($('m-setpoint-save')) {
         $('m-setpoint-save').addEventListener('click', () => {
             const v = parseInt($('m-setpoint-edit').value, 10);
-            if (v>=1 && v<=40) postCmd(`/api/stove/setpoint/${v}`, () => setTimeout(loadStatus, 500));
+            if (setpointLimits && v >= setpointLimits.min && v <= setpointLimits.max) postCmd(`/api/stove/setpoint/${v}`, () => setTimeout(loadStatus, 500));
         });
     }
     if ($('m-power-save')) {

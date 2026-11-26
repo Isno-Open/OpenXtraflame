@@ -232,6 +232,23 @@ esp_err_t mn_set_ram(mn_ram_addr_t addr, uint8_t value);
  * Non-blocking; the master task drains the queue between polls. */
 esp_err_t mn_write_register(mn_ram_addr_t addr, uint8_t value);
 
+/* Commandes et réglages du poêle : les SEULES entrées à utiliser depuis la
+ * page web, MQTT et le pont cloud. Elles bornent la valeur avant d'écrire, car
+ * une écriture en EEPROM survit à l'extinction. Les bornes sont celles que le
+ * module d'origine applique au type I_VENT (docs/REGISTRES.md). Hors bornes :
+ * ESP_ERR_INVALID_ARG, et rien n'est écrit. */
+#define MN_POWER_MIN       1
+#define MN_POWER_MAX       5
+#define MN_SETPOINT_MIN_C  6
+#define MN_SETPOINT_MAX_C  38
+esp_err_t mn_turn_on(void);
+esp_err_t mn_turn_off(void);
+esp_err_t mn_clear_alarm(void);
+esp_err_t mn_set_power(int level);
+esp_err_t mn_set_setpoint(int celsius);
+/* Consigne d'un programme horaire, à l'adresse EEPROM donnée : même borne. */
+esp_err_t mn_set_chrono_setpoint(mn_ram_addr_t addr, int celsius);
+
 /* Get current RAM shadow value */
 uint8_t mn_get_ram(mn_ram_addr_t addr);
 

@@ -160,6 +160,36 @@ esp_err_t mn_write_register(mn_ram_addr_t addr, uint8_t value)
     return ESP_OK;
 }
 
+/* Allumage et extinction par le registre d'état, la méthode mesurée sur la
+ * Teodora Evo : écrire l'état demandé, le poêle enchaîne. */
+esp_err_t mn_turn_on(void)     { return mn_write_register(MN_RAM_STOVE_STATE, MN_STATE_STARTING); }
+esp_err_t mn_turn_off(void)    { return mn_write_register(MN_RAM_STOVE_STATE, MN_STATE_FINAL_CLEANING); }
+esp_err_t mn_clear_alarm(void) { return mn_write_register(MN_RAM_STOVE_STATE, MN_STATE_OFF); }
+
+static esp_err_t mn_write_bounded(mn_ram_addr_t addr, int value, int min, int max)
+{
+    if (value < min || value > max) {
+        ESP_LOGW(TAG, "refused write [0x%02x] = %d, outside %d..%d", addr, value, min, max);
+        return ESP_ERR_INVALID_ARG;
+    }
+    return mn_write_register(addr, (uint8_t)value);
+}
+
+esp_err_t mn_set_power(int level)
+{
+    return mn_write_bounded(MN_EEP_POWER_SET_IVENT, level, MN_POWER_MIN, MN_POWER_MAX);
+}
+
+esp_err_t mn_set_setpoint(int celsius)
+{
+    return mn_write_bounded(MN_EEP_TEMP_SET_IVENT, celsius, MN_SETPOINT_MIN_C, MN_SETPOINT_MAX_C);
+}
+
+esp_err_t mn_set_chrono_setpoint(mn_ram_addr_t addr, int celsius)
+{
+    return mn_write_bounded(addr, celsius, MN_SETPOINT_MIN_C, MN_SETPOINT_MAX_C);
+}
+
 uint8_t mn_get_ram(mn_ram_addr_t addr)
 {
     if (addr >= MN_RAM_MAX) return 0;

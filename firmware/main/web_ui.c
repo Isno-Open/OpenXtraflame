@@ -93,22 +93,15 @@ static esp_err_t handle_stove_cmd(httpd_req_t *req)
 {
     /* Extract command from URL after /api/stove/ */
     const char *cmd = req->uri + strlen("/api/stove/");
-    /* Micronova standard: single STOVE_STATE register (=0x21) drives commands.
-     * Write 0x01 = turn on ; write 0x06 = turn off ; write 0x00 = force off. */
-    if (strcmp(cmd, "on") == 0)          mn_write_register(MN_RAM_STOVE_STATE, 0x01);
-    else if (strcmp(cmd, "off") == 0)    mn_write_register(MN_RAM_STOVE_STATE, 0x06);
-    else if (strcmp(cmd, "reset_alarm") == 0) mn_write_register(MN_RAM_STOVE_STATE, 0x00);
-    else if (strncmp(cmd, "setpoint/", 9) == 0) {
-        int v = atoi(cmd + 9);
-        if (v < 1 || v > 40) return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "range 1-40");
-        mn_write_register(MN_EEP_TEMP_SET_IVENT, (uint8_t)v);
-    }
-    else if (strncmp(cmd, "power/", 6) == 0) {
-        int v = atoi(cmd + 6);
-        if (v < 1 || v > 5) return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "range 1-5");
-        mn_write_register(MN_EEP_POWER_SET_IVENT, (uint8_t)v);
-    }
+    /* Les bornes vivent dans micronova.c : ici on ne fait que router. */
+    esp_err_t r;
+    if (strcmp(cmd, "on") == 0)               r = mn_turn_on();
+    else if (strcmp(cmd, "off") == 0)         r = mn_turn_off();
+    else if (strcmp(cmd, "reset_alarm") == 0) r = mn_clear_alarm();
+    else if (strncmp(cmd, "setpoint/", 9) == 0) r = mn_set_setpoint(atoi(cmd + 9));
+    else if (strncmp(cmd, "power/", 6) == 0)    r = mn_set_power(atoi(cmd + 6));
     else return httpd_resp_send_404(req);
+    if (r != ESP_OK) return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "value out of range");
     return httpd_resp_send(req, "{\"ok\":true}", 11);
 }
 
@@ -137,6 +130,9 @@ static esp_err_t handle_status_json(httpd_req_t *req)
     cJSON_AddStringToObject(stove, "state_label", mn_state_label(s.state));
     cJSON_AddNumberToObject(stove, "power", s.power_level);
     cJSON_AddNumberToObject(stove, "setpoint", s.set_temperature);
+    /* Bornes de la consigne : la page les lit ici, elle ne les recopie pas. */
+    cJSON_AddNumberToObject(stove, "setpoint_min", MN_SETPOINT_MIN_C);
+    cJSON_AddNumberToObject(stove, "setpoint_max", MN_SETPOINT_MAX_C);
     cJSON_AddNumberToObject(stove, "hours_total",  s.hours_total);
     cJSON_AddNumberToObject(stove, "starts_total", s.starts_total);
     cJSON_AddNumberToObject(stove, "hours_p1", s.hours_p1);
@@ -692,8 +688,7 @@ static esp_err_t handle_chrono(httpd_req_t *req)
             }
             cJSON *temp = cJSON_GetObjectItem(pr, "temp_c");
             if (cJSON_IsNumber(temp)) {
-                mn_write_register(base + 9, (uint8_t)temp->valueint);
-                writes++;
+                if (mn_set_chrono_setpoint(base + 9, temp->valueint) == ESP_OK) writes++;
             }
             cJSON *days = cJSON_GetObjectItem(pr, "days");
             if (cJSON_IsArray(days)) {

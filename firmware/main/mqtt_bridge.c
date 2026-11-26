@@ -5,7 +5,7 @@
  * Subscribes to <prefix>/cmd/# for control:
  *   <prefix>/cmd/on        -> mn_turn_on
  *   <prefix>/cmd/off       -> mn_turn_off
- *   <prefix>/cmd/setpoint  -> mn_set_temperature
+ *   <prefix>/cmd/setpoint  -> mn_set_setpoint
  *   <prefix>/cmd/power     -> mn_set_power
  *   <prefix>/cmd/reset_alarm -> mn_clear_alarm
  */
@@ -45,10 +45,9 @@ static void handle_command(const char *topic, size_t tlen,
     /* Master design : the ESP32 polls the stove and pushes writes on the bus.
      * mn_write_register() updates the local shadow AND queues a Micronova
      * write frame that the master task will send at the next slot. */
-    /* Standard Micronova: STOVE_STATE register (=0x21) drives all commands. */
-    if (strstr(topic, "/cmd/on"))          { mn_write_register(MN_RAM_STOVE_STATE, 0x01); return; }
-    if (strstr(topic, "/cmd/off"))         { mn_write_register(MN_RAM_STOVE_STATE, 0x06); return; }
-    if (strstr(topic, "/cmd/reset_alarm")) { mn_write_register(MN_RAM_STOVE_STATE, 0x00); return; }
+    if (strstr(topic, "/cmd/on"))          { mn_turn_on(); return; }
+    if (strstr(topic, "/cmd/off"))         { mn_turn_off(); return; }
+    if (strstr(topic, "/cmd/reset_alarm")) { mn_clear_alarm(); return; }
     /* Reset maintenance counters : snapshot h_total / starts_total à l'instant T */
     if (strstr(topic, "/cmd/reset_service")) {
         mn_stove_state_snapshot_t s; mn_get_snapshot(&s);
@@ -97,10 +96,8 @@ static void handle_command(const char *topic, size_t tlen,
         char buf[8] = {0};
         if (dlen < sizeof(buf)) {
             memcpy(buf, data, dlen);
-            int v = atoi(buf);
-            /* Écrit dans EEPROM_SET_AMB (=0x7D I_VENT) = source persistante.
-             * Bank 1 encoded dans reg_addr → opcode 0xA0 EEPROM write. */
-            mn_write_register(MN_EEP_TEMP_SET_IVENT, (uint8_t)v);
+            /* Consigne persistante, en EEPROM ; bornée dans micronova.c. */
+            mn_set_setpoint(atoi(buf));
         }
         return;
     }
@@ -108,9 +105,7 @@ static void handle_command(const char *topic, size_t tlen,
         char buf[4] = {0};
         if (dlen < sizeof(buf)) {
             memcpy(buf, data, dlen);
-            int v = atoi(buf);
-            /* Écrit dans EEPROM_SET_POWER (=0x7F I_VENT). Cf setpoint ci-dessus. */
-            mn_write_register(MN_EEP_POWER_SET_IVENT, (uint8_t)v);
+            mn_set_power(atoi(buf));
         }
         return;
     }
@@ -142,7 +137,7 @@ static void handle_command(const char *topic, size_t tlen,
                 mn_write_register(addr, raw);
             }
         } else if (strstr(cp, "_temp")) {
-            mn_write_register(base_addr[idx] + 9, (uint8_t)atoi(buf));
+            mn_set_chrono_setpoint(base_addr[idx] + 9, atoi(buf));
         }
         return;
     }
@@ -797,8 +792,8 @@ esp_err_t mqtt_bridge_publish_discovery(void)
             cJSON_AddStringToObject(p, "name", name);
             cJSON_AddStringToObject(p, "state_topic", chrono_topic);
             cJSON_AddStringToObject(p, "value_template", tpl);
-            cJSON_AddNumberToObject(p, "min", 1);
-            cJSON_AddNumberToObject(p, "max", 30);
+            cJSON_AddNumberToObject(p, "min", MN_SETPOINT_MIN_C);
+            cJSON_AddNumberToObject(p, "max", MN_SETPOINT_MAX_C);
             cJSON_AddNumberToObject(p, "step", 1);
             cJSON_AddStringToObject(p, "unit_of_measurement", "°C");
             cJSON_AddStringToObject(p, "mode", "box");
@@ -1154,8 +1149,8 @@ esp_err_t mqtt_bridge_publish_discovery(void)
         char cmd[160];
         snprintf(cmd, sizeof(cmd), "%s/cmd/setpoint", sub_topic_prefix);
         cJSON_AddStringToObject(p, "command_topic", cmd);
-        cJSON_AddNumberToObject(p, "min", 10);
-        cJSON_AddNumberToObject(p, "max", 30);
+        cJSON_AddNumberToObject(p, "min", MN_SETPOINT_MIN_C);
+        cJSON_AddNumberToObject(p, "max", MN_SETPOINT_MAX_C);
         cJSON_AddNumberToObject(p, "step", 1);
         cJSON_AddStringToObject(p, "unit_of_measurement", "°C");
         cJSON_AddStringToObject(p, "mode", "slider");
