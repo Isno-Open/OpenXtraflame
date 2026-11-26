@@ -761,8 +761,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const d = await j('/api/chrono');
             chronoState = d;
-            const masterCb = document.getElementById('chrono-master-cb');
-            if (masterCb) masterCb.checked = !!d.master_enabled;
             const wrap = document.getElementById('chrono-programs');
             if (wrap && d.programs) {
                 wrap.innerHTML = d.programs.map(p => {
@@ -800,7 +798,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('chrono-save').addEventListener('click', async () => {
         const resEl = document.getElementById('chrono-save-result');
         const payload = {
-            master_enabled: document.getElementById('chrono-master-cb').checked,
             programs: [0,1,2,3].map(idx => {
                 const inputs = document.querySelectorAll(`input[data-prog="${idx}"]`);
                 const prog = { id: idx + 1, days: [] };

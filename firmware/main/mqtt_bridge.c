@@ -115,15 +115,6 @@ static void handle_command(const char *topic, size_t tlen,
         return;
     }
     /* Chrono commands */
-    if (strstr(topic, "/cmd/chrono_master")) {
-        char buf[8] = {0};
-        if (dlen < sizeof(buf)) {
-            memcpy(buf, data, dlen);
-            uint8_t v = (strstr(buf, "ON") || buf[0]=='1' || strstr(buf, "true")) ? 1 : 0;
-            mn_write_register(MN_EEP_CHRONO_ENABLE, v);
-        }
-        return;
-    }
     /* /cmd/chrono_progN_field with N=1..4 and field=enable|start|stop|temp */
     const char *cp = strstr(topic, "/cmd/chrono_prog");
     if (cp) {
@@ -736,6 +727,10 @@ esp_err_t mqtt_bridge_publish_discovery(void)
         /* Anciens types réutilisés */
         snprintf(t, sizeof(t), "homeassistant/binary_sensor/%s/chrono_master/config", device_id);
         esp_mqtt_client_publish(client, t, "", 0, 1, 1);
+        /* L'interrupteur général n'existe pas sur un poêle ventilé : le menu du Teodora Evo
+         * commence à PRG 1 et la carte d'origine ne lui donne aucune adresse (vu le 2026-11-26). */
+        snprintf(t, sizeof(t), "homeassistant/switch/%s/chrono_master/config", device_id);
+        esp_mqtt_client_publish(client, t, "", 0, 1, 1);
         for (int i = 1; i <= 4; i++) {
             /* Anciens obj_id "chrono_prog<N>" (=renommé, plusieurs itérations) */
             snprintf(t, sizeof(t), "homeassistant/sensor/%s/chrono_prog%d/config", device_id, i);
@@ -754,20 +749,6 @@ esp_err_t mqtt_bridge_publish_discovery(void)
         }
     }
 
-    /* Master switch */
-    {
-        cJSON *p = cJSON_CreateObject();
-        cJSON_AddStringToObject(p, "name", "Chrono master");
-        cJSON_AddStringToObject(p, "state_topic", chrono_topic);
-        cJSON_AddStringToObject(p, "value_template",
-            "{{ 'ON' if value_json.master_enabled else 'OFF' }}");
-        cJSON_AddStringToObject(p, "payload_on",  "ON");
-        cJSON_AddStringToObject(p, "payload_off", "OFF");
-        snprintf(cmd_topic, sizeof(cmd_topic), "%s/cmd/chrono_master", sub_topic_prefix);
-        cJSON_AddStringToObject(p, "command_topic", cmd_topic);
-        cJSON_AddStringToObject(p, "entity_category", "config");
-        publish_disco("switch", "chrono_master", p);
-    }
     /* Summary sensor per program - reste dans section Contrôles/Capteurs faute
      * de mieux (=sensor + entity_category "config" impossible en HA 2026,
      * text sans command_topic invisible). */
