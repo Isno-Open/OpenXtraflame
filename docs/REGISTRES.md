@@ -28,14 +28,14 @@ Lecture : `loc 0x00` pour la RAM, `0x20` pour l'EEPROM ; écriture : `0x80` pour
 | `EEPROM_SET_AMB_ADDR` | `0x7D` | 27 quand l'écran affiche 27 |
 | `RAM_T_FUMI_ADDR` | `0x02` | octet + 30 = la valeur de `0x5A`, sur toute la montée de 76 à 126 °C (2026-11-26) |
 | `RAM_POT_REALE_ADDR` | `0x34` | 12, 11, 9 puis 2 pendant que le poêle redescend de la puissance 4 à sa consigne de 1 : (octet ÷ 4) + 1 |
-| `RAM_STATO_GESTITO` | `0xE8` | 16 (`0x10`) au repos comme en marche ; rien n'y a été écrit |
+| `RAM_STATO_GESTITO` | `0xE8` | 16 (`0x10`) au repos comme en marche ; `0xAA` écrit en marche éteint le poêle (état 4 vers 6 en moins de cinq secondes), puis le registre revient à 16 |
 | `RAM_ALLARM_ADDR` | `0x33` | 0 sans alarme (`0x40`, l'adresse supposée avant, vaut 205 dans le même état) |
 | `RAM_MOD_ADDR` | `0xA5` | 1 en marche |
 | `EEPROM_SET_CHRONO1_START_ADDR` | `0x4D` | 17 quand l'écran affiche START PRG1 02:50 (dizaines de minutes) |
 | `EEPROM_SET_CHRONO1_STOP_ADDR` | `0x4E` | 23 quand l'écran affiche STOP PRG1 03:50 |
 | `EEPROM_SET_CHRONO_ENABLE1_ADDR` | `0xAF` | 0 quand l'écran affiche PRG 1 OFF |
 
-L'allumage par écriture de 1 dans `0x21` fonctionne sur ce poêle : états 1, 2, 3 puis 4 en onze minutes, `0xE8` inchangé.
+L'allumage par écriture de 1 dans `0x21` fonctionne sur ce poêle : états 1, 2, 3 puis 4 en onze minutes, `0xE8` inchangé. L'extinction par la commande du module d'origine fonctionne aussi : trame `80 E8 AA 12`, poêle en état 4. L'allumage par `0x55` reste à essayer.
 
 Sur ce poêle ventilé, `0xDF`, `0xE0` et `0xE2` rendent tous `0x20`, comme leurs voisines `0xE7` et `0xE9` : ce sont des cases sans contenu.
 
