@@ -337,6 +337,31 @@ static void update_snapshot_from_shadow(void)
 static uint16_t poll_list[POLL_LIST_MAX];
 static int poll_list_count = 0;
 
+/* Liste prioritaire : ce que la page d'accueil et Home Assistant affichent en
+ * premier. Relevé le 2026-11-27 : avec 133 registres dans la liste froide, la
+ * consigne et l'alarme n'étaient relues que toutes les 40 à 77 s, et l'accueil
+ * restait plus d'une minute sur une valeur périmée. */
+static const uint16_t HOT_ADDRS[] = {
+    MN_RAM_STOVE_STATE,
+    MN_RAM_TAMB,
+    MN_EEP_POWER_SET_IVENT,   /* 0x17F = consigne persistante puissance */
+    MN_RAM_POWER_REAL,
+    MN_RAM_FUMES_TEMP,
+    MN_EEP_TEMP_SET_IVENT,    /* 0x17D = consigne de température */
+    MN_RAM_ALLARM,            /* 0x033 = code d'alarme */
+};
+static const int HOT_N = sizeof(HOT_ADDRS) / sizeof(HOT_ADDRS[0]);
+
+/* Ajoute une adresse à la liste froide, sauf si elle y est déjà ou si la liste
+ * prioritaire la lit : une adresse lue deux fois allonge le tour pour rien. */
+static void poll_list_add(uint16_t addr)
+{
+    if (poll_list_count >= POLL_LIST_MAX) return;
+    for (int i = 0; i < HOT_N; i++) if (HOT_ADDRS[i] == addr) return;
+    for (int i = 0; i < poll_list_count; i++) if (poll_list[i] == addr) return;
+    poll_list[poll_list_count++] = addr;
+}
+
 static void init_poll_list(void) {
     /* Adresses I_VENT (=Teodora Evo) validées empiriquement 2026-07-08.
      * EEPROM SET_POWER=0x7F, SET_AMB=0x7D confirmé via firmware reverse
@@ -367,21 +392,19 @@ static void init_poll_list(void) {
         MN_EEP_CHRONO1_START, MN_EEP_CHRONO2_START,
         MN_EEP_CHRONO3_START, MN_EEP_CHRONO4_START
     };
-    int n = sizeof(list)/sizeof(list[0]);
-    for (int i = 0; i < n; i++) poll_list[i] = list[i];
+    poll_list_count = 0;
+    for (size_t i = 0; i < sizeof(list)/sizeof(list[0]); i++) poll_list_add(list[i]);
     for (int p = 0; p < 4; p++) {
-        for (int off = 0; off < 10 && n < POLL_LIST_MAX; off++) {
-            poll_list[n++] = chrono_prog_base[p] + off;
-        }
+        for (int off = 0; off < 10; off++) poll_list_add(chrono_prog_base[p] + off);
     }
     /* Zone params tech Micronova I023 : EEPROM 0x40-0x7F (=64 registres).
-     * Poll seul = lecture live via /api/params/tech. Le watcher passif tick
-     * (=save NVS à chaque cycle) est resté désactivé, c'était le vrai coupable
-     * du brick 2026-07-09 (=NVS write flood + saturation). */
-    for (int i = 0; i < 0x40 && n < POLL_LIST_MAX; i++) {
-        poll_list[n++] = 0x140 + i;
-    }
-    poll_list_count = n;
+     * Poll seul = lecture live via /api/params/tech et publication MQTT
+     * params_tech. Elle recouvre les programmes chrono et les deux consignes :
+     * poll_list_add écarte ces doublons. Le watcher passif tick (=save NVS à
+     * chaque cycle) est resté désactivé, c'était le vrai coupable du brick
+     * 2026-07-09 (=NVS write flood + saturation). */
+    for (int i = 0; i < 0x40; i++) poll_list_add(0x140 + i);
+    ESP_LOGI(TAG, "poll list: %d hot, %d cold", HOT_N, poll_list_count);
 }
 static int poll_interval_ms = 150;   /* delay between two polls */
 
@@ -546,17 +569,8 @@ static void mn_slave_task(void *arg)
         }
 
         /* Alternance hot/cold : chaque tick fait UNE transaction seulement.
-         * Hot list = 5 registres critiques poll à chaque cycle → latence
-         * poêle→snapshot ~1.5s au lieu de ~9.5s pour ces valeurs.
-         * Cold list = poll_list complète, cycle ~17s (=OK compteurs/chrono). */
-        static const uint16_t HOT_ADDRS[] = {
-            MN_RAM_STOVE_STATE,
-            MN_RAM_TAMB,
-            MN_EEP_POWER_SET_IVENT,   /* 0x17F = consigne persistante puissance */
-            MN_RAM_POWER_REAL,
-            MN_RAM_FUMES_TEMP,
-        };
-        static const int HOT_N = sizeof(HOT_ADDRS) / sizeof(HOT_ADDRS[0]);
+         * Les registres de HOT_ADDRS (déclarés plus haut) sont relus à chaque
+         * tour de la liste prioritaire ; la liste froide porte le reste. */
         static int hot_idx = 0;
         static bool hot_turn = true;
         if (hot_turn) {
