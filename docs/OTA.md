@@ -19,7 +19,7 @@ Le firmware utilise le mécanisme OTA standard ESP-IDF avec 2 slots :
                             ou nouveau upload
 ```
 
-**Rollback automatique** : si le nouveau firmware ne marque pas "app valid" dans les 30 secondes après boot (=via `esp_ota_mark_app_valid_cancel_rollback()`), le bootloader ESP-IDF revient automatiquement au slot précédent.
+**Pas de retour arrière automatique.** L'option `CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE` n'est pas activée : une image envoyée par OTA est active dès le redémarrage, et le chargeur d'amorçage ne revient pas seul à l'ancienne. Le retour arrière est **manuel** (bouton de l'interface web, `POST /ota/rollback`, ou commande MQTT `rollback_firmware`) et suppose donc que le module soit encore joignable. Si une image ne monte plus le Wi-Fi, la récupération passe par un flash filaire.
 
 ## Mécanisme 1 - Upload via Web UI
 
@@ -29,7 +29,7 @@ Sur la page config web, section OTA :
 2. Cliquer "Upload"
 3. Barre de progression
 4. Module redémarre automatiquement
-5. Nouveau firmware boot, marque comme valide après 30s
+5. Le nouveau firmware démarre et devient l'image active
 
 Endpoint : `POST /ota/upload` avec Content-Type multipart/form-data
 
@@ -111,20 +111,14 @@ Authorization: Bearer <token>
 
 Configurer le token via Web UI (=NVS).
 
-## Fallback si nouveau firmware crashe
+## Si le nouveau firmware plante
 
-Le bootloader ESP-IDF détecte via watchdog si le firmware :
-- Boot loop dans les 30s
-- Panic
-- Ne marque pas "app valid" avant timeout
+Deux filets existent, et aucun n'est un retour arrière automatique :
 
-Dans ce cas, bascule automatique sur l'ancien slot ota_0/ota_1.
+- **Mode sans échec** : après 3 plantages consécutifs au démarrage, le firmware repart en mode minimal (Wi-Fi et OTA seulement, sans la tâche Micronova). Il tourne sur la **même** image : il ne sert à rien si c'est le Wi-Fi qui est en cause.
+- **Retour arrière manuel** : `POST /ota/rollback` rebascule sur l'autre partition, qui contient l'image précédente.
 
-Pour désactiver le fallback (=marquer immédiatement valide) :
-
-```c
-esp_ota_mark_app_valid_cancel_rollback();
-```
+En dernier recours : flash filaire de l'archive complète (chargeur d'amorçage, table des partitions, `ota_data`, application).
 
 ## OTA du firmware POELE (=via UART)
 
